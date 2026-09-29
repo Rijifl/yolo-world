@@ -1,0 +1,12 @@
+.venv/
+weights/
+data/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.gradio/
+runs/
+*.pt
+*.ts
+.DS_Store
+*.lock
