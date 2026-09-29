@@ -1,0 +1,26 @@
+# Versions actually installed and tested (Windows 11, Python 3.12, RTX 3050 Laptop GPU, CUDA 12.4 wheels).
+#
+# PyTorch with CUDA comes from PyTorch's own index. Install it FIRST:
+#   pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu124
+# then:
+#   pip install -r requirements.txt
+# (CPU-only / macOS: plain `pip install torch==2.6.0 torchvision==0.21.0` works too, just slower.)
+--extra-index-url https://download.pytorch.org/whl/cu124
+torch==2.6.0
+torchvision==0.21.0
+
+# Detection models (YOLO-World v2, YOLOv8, YOLOE)
+ultralytics==8.4.166
+# OpenAI CLIP text encoder used by YOLO-World's set_classes() (Ultralytics' fork, pinned commit)
+clip @ git+https://github.com/ultralytics/CLIP.git@a13192f8cb767260d7dfd98c843b0716593169e7
+ftfy==6.3.1
+regex==2026.9.29
+
+transformers==5.17.0
+gradio==6.29.0
+pycocotools==2.0.11
+matplotlib==3.11.2
+pandas==3.0.6
+numpy==2.5.2
+pillow==12.3.0
+opencv-python==5.0.0.93
