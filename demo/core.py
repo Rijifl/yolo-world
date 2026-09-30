@@ -95,10 +95,42 @@ SAMPLES = [
 ]
 
 
+# Everyday words -> the COCO-80 class that covers them. Used so the UI never claims YOLOv8 "cannot" find something
+# it actually has a class for (e.g. necktie = tie). Rule: a word is listed as "no COCO class" only if neither the
+# word itself nor a synonym below is one of YOLOv8's 80 class names. Ambiguous cases (coffee table ~ dining table)
+# are mapped to the COCO class on purpose, to err on the side of NOT over-claiming.
+COCO_SYNONYMS = {
+    "people": "person", "man": "person", "woman": "person", "men": "person", "women": "person", "child": "person",
+    "kid": "person", "boy": "person", "girl": "person", "human": "person", "pedestrian": "person", "guy": "person",
+    "baby": "person", "player": "person", "rider": "person",
+    "necktie": "tie", "bike": "bicycle", "bicycles": "bicycle", "motorbike": "motorcycle", "scooter": "motorcycle",
+    "aeroplane": "airplane", "plane": "airplane", "aircraft": "airplane", "jet": "airplane",
+    "sofa": "couch", "settee": "couch", "television": "tv", "tv monitor": "tv", "tvmonitor": "tv", "monitor": "tv",
+    "screen": "tv", "mobile phone": "cell phone", "cellphone": "cell phone", "phone": "cell phone",
+    "smartphone": "cell phone", "mobile": "cell phone", "iphone": "cell phone",
+    "table": "dining table", "coffee table": "dining table", "desk": "dining table", "diningtable": "dining table",
+    "computer mouse": "mouse", "notebook computer": "laptop", "computer keyboard": "keyboard",
+    "remote control": "remote", "tv remote": "remote", "fridge": "refrigerator", "microwave oven": "microwave",
+    "hair dryer": "hair drier", "hairdryer": "hair drier", "puppy": "dog", "kitten": "cat", "pony": "horse",
+    "hydrant": "fire hydrant", "motorcar": "car", "automobile": "car", "taxi": "car", "lorry": "truck",
+    "pickup truck": "truck", "ship": "boat", "sailboat": "boat", "yacht": "boat", "canoe": "boat", "kayak": "boat",
+    "ski": "skis", "snowboards": "snowboard", "skate board": "skateboard", "surf board": "surfboard",
+    "tennis racquet": "tennis racket", "racket": "tennis racket", "racquet": "tennis racket", "ball": "sports ball",
+    "football": "sports ball", "soccer ball": "sports ball", "basketball": "sports ball", "baseball": "sports ball",
+    "glass of wine": "wine glass", "mug": "cup", "coffee cup": "cup", "plant": "potted plant",
+    "houseplant": "potted plant", "flower pot": "vase", "doughnut": "donut", "hotdog": "hot dog",
+    "teddy": "teddy bear", "stuffed animal": "teddy bear", "traffic signal": "traffic light", "purse": "handbag",
+    "bag": "handbag", "rucksack": "backpack", "suitcase bag": "suitcase", "luggage": "suitcase", "sheep": "sheep",
+    "lamb": "sheep", "cattle": "cow", "bull": "cow", "toilet seat": "toilet", "sink basin": "sink",
+    "parking sign": "parking meter", "stop signs": "stop sign", "sandwiches": "sandwich", "pizzas": "pizza",
+    "bottles": "bottle", "chairs": "chair", "cars": "car", "dogs": "dog", "cats": "cat", "persons": "person",
+}
+
+
 def coco_class_for(word: str, coco_names: set[str]) -> str | None:
-    """COCO-80 class name that covers `word` (exact or simple plural), else None."""
+    """COCO-80 class name that covers `word` (exact, simple plural, or synonym), else None."""
     w = " ".join(word.lower().split())
-    for cand in (w, w[:-1] if w.endswith("s") else w):
+    for cand in (w, w[:-1] if w.endswith("s") else w, COCO_SYNONYMS.get(w)):
         if cand and cand in coco_names:
             return cand
     return None

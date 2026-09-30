@@ -1,0 +1,1288 @@
+{
+  "generated": "2026-09-29 20:23:03",
+  "device": "CPU",
+  "torch": "2.6.0+cu124",
+  "ultralytics": "8.4.166",
+  "python": "3.12.6",
+  "imgsz": 640,
+  "timing_note": "inference_ms = model forward pass only (Ultralytics' timer), median of 3 runs after warm-up; predict_ms adds pre-processing and NMS. text_encoding_ms_once = CLIP text encoding of the vocabulary, done once per vocabulary.",
+  "gpu_sharing_note": "Run on CPU; timings are indicative, not a clean benchmark.",
+  "failure_cases": [
+    "demo/images/guitar_stage.jpg",
+    "demo/images/statue_bench.jpg"
+  ],
+  "images": [
+    {
+      "image": "demo/images/guitar_stage.jpg",
+      "output_png": "results/demo/guitar_stage_side_by_side.png",
+      "vocabulary": [
+        "person",
+        "guitar",
+        "microphone",
+        "necktie"
+      ],
+      "vocab_words_without_coco80_class": [
+        "guitar",
+        "microphone"
+      ],
+      "vocab_words_mapped_to_coco80": {
+        "necktie": "tie"
+      },
+      "yolo_world": {
+        "model": "yolov8s-worldv2.pt",
+        "conf_threshold": 0.1,
+        "text_encoding_ms_once": 109.7,
+        "inference_ms_median": 111.4,
+        "predict_ms_median": 114.16,
+        "detections": [
+          {
+            "label": "person",
+            "conf": 0.8872,
+            "box_xyxy": [
+              73.4,
+              54.7,
+              359.4,
+              375.0
+            ]
+          },
+          {
+            "label": "guitar",
+            "conf": 0.6284,
+            "box_xyxy": [
+              168.9,
+              222.7,
+              470.6,
+              375.0
+            ]
+          },
+          {
+            "label": "microphone",
+            "conf": 0.3563,
+            "box_xyxy": [
+              249.2,
+              100.1,
+              304.7,
+              161.4
+            ]
+          },
+          {
+            "label": "person",
+            "conf": 0.1381,
+            "box_xyxy": [
+              299.1,
+              287.7,
+              360.9,
+              374.6
+            ]
+          },
+          {
+            "label": "microphone",
+            "conf": 0.1094,
+            "box_xyxy": [
+              276.7,
+              100.5,
+              305.3,
+              127.9
+            ]
+          }
+        ],
+        "vocab_words_found": [
+          "guitar",
+          "microphone",
+          "person"
+        ],
+        "vocab_words_not_found": [
+          "necktie"
+        ]
+      },
+      "yolov8_closed_set": {
+        "model": "yolov8s.pt",
+        "conf_threshold": 0.25,
+        "inference_ms_median": 98.3,
+        "predict_ms_median": 101.42,
+        "detections": [
+          {
+            "label": "person",
+            "conf": 0.7153,
+            "box_xyxy": [
+              73.2,
+              54.0,
+              346.1,
+              374.5
+            ]
+          },
+          {
+            "label": "tie",
+            "conf": 0.5853,
+            "box_xyxy": [
+              180.1,
+              163.3,
+              235.5,
+              341.4
+            ]
+          }
+        ]
+      },
+      "missed_by_yolo_world_but_found_by_yolov8": [
+        "necktie"
+      ],
+      "note": "Miss: YOLO-World-S does not report the necktie at the 0.10 threshold (its best 'necktie' score is only ~0.06), while the closed-set YOLOv8s finds it as COCO class 'tie' (~0.6). Open vocabulary does not mean better on every class the closed-set model was trained on.",
+      "failure_case": true
+    },
+    {
+      "image": "demo/images/traffic_cones.jpg",
+      "output_png": "results/demo/traffic_cones_side_by_side.png",
+      "vocabulary": [
+        "traffic cone",
+        "truck",
+        "car",
+        "street lamp",
+        "crane"
+      ],
+      "vocab_words_without_coco80_class": [
+        "traffic cone",
+        "street lamp",
+        "crane"
+      ],
+      "vocab_words_mapped_to_coco80": {},
+      "yolo_world": {
+        "model": "yolov8s-worldv2.pt",
+        "conf_threshold": 0.2,
+        "text_encoding_ms_once": 123.5,
+        "inference_ms_median": 111.83,
+        "predict_ms_median": 114.17,
+        "detections": [
+          {
+            "label": "traffic cone",
+            "conf": 0.8614,
+            "box_xyxy": [
+              128.4,
+              313.4,
+              159.8,
+              372.2
+            ]
+          },
+          {
+            "label": "traffic cone",
+            "conf": 0.8139,
+            "box_xyxy": [
+              81.4,
+              315.3,
+              114.5,
+              377.5
+            ]
+          },
+          {
+            "label": "traffic cone",
+            "conf": 0.7815,
+            "box_xyxy": [
+              181.1,
+              314.0,
+              210.8,
+              367.9
+            ]
+          },
+          {
+            "label": "traffic cone",
+            "conf": 0.7791,
+            "box_xyxy": [
+              220.1,
+              311.5,
+              244.6,
+              364.0
+            ]
+          },
+          {
+            "label": "traffic cone",
+            "conf": 0.7516,
+            "box_xyxy": [
+              435.6,
+              293.9,
+              447.7,
+              319.1
+            ]
+          },
+          {
+            "label": "traffic cone",
+            "conf": 0.7274,
+            "box_xyxy": [
+              458.4,
+              294.5,
+              474.0,
+              324.8
+            ]
+          },
+          {
+            "label": "traffic cone",
+            "conf": 0.7028,
+            "box_xyxy": [
+              162.2,
+              303.4,
+              182.7,
+              343.4
+            ]
+          },
+          {
+            "label": "street lamp",
+            "conf": 0.692,
+            "box_xyxy": [
+              454.2,
+              186.9,
+              482.0,
+              276.5
+            ]
+          },
+          {
+            "label": "truck",
+            "conf": 0.6453,
+            "box_xyxy": [
+              510.9,
+              250.9,
+              640.0,
+              335.4
+            ]
+          },
+          {
+            "label": "street lamp",
+            "conf": 0.5142,
+            "box_xyxy": [
+              400.1,
+              212.5,
+              420.8,
+              278.7
+            ]
+          },
+          {
+            "label": "traffic cone",
+            "conf": 0.4982,
+            "box_xyxy": [
+              476.6,
+              295.9,
+              485.4,
+              316.7
+            ]
+          },
+          {
+            "label": "car",
+            "conf": 0.4115,
+            "box_xyxy": [
+              0.0,
+              274.6,
+              96.9,
+              308.4
+            ]
+          },
+          {
+            "label": "car",
+            "conf": 0.3666,
+            "box_xyxy": [
+              414.5,
+              270.2,
+              477.6,
+              301.7
+            ]
+          },
+          {
+            "label": "truck",
+            "conf": 0.2378,
+            "box_xyxy": [
+              408.8,
+              269.3,
+              477.0,
+              303.6
+            ]
+          }
+        ],
+        "vocab_words_found": [
+          "car",
+          "street lamp",
+          "traffic cone",
+          "truck"
+        ],
+        "vocab_words_not_found": [
+          "crane"
+        ]
+      },
+      "yolov8_closed_set": {
+        "model": "yolov8s.pt",
+        "conf_threshold": 0.25,
+        "inference_ms_median": 94.34,
+        "predict_ms_median": 96.54,
+        "detections": [
+          {
+            "label": "truck",
+            "conf": 0.7582,
+            "box_xyxy": [
+              508.9,
+              250.3,
+              639.7,
+              335.5
+            ]
+          },
+          {
+            "label": "car",
+            "conf": 0.6992,
+            "box_xyxy": [
+              0.3,
+              275.4,
+              95.6,
+              308.2
+            ]
+          },
+          {
+            "label": "truck",
+            "conf": 0.6706,
+            "box_xyxy": [
+              399.9,
+              269.9,
+              478.6,
+              304.0
+            ]
+          },
+          {
+            "label": "car",
+            "conf": 0.3309,
+            "box_xyxy": [
+              399.8,
+              269.8,
+              478.3,
+              304.6
+            ]
+          },
+          {
+            "label": "car",
+            "conf": 0.2573,
+            "box_xyxy": [
+              474.4,
+              273.1,
+              512.8,
+              307.6
+            ]
+          }
+        ]
+      },
+      "missed_by_yolo_world_but_found_by_yolov8": [],
+      "note": "",
+      "failure_case": false
+    },
+    {
+      "image": "demo/images/bike_helmet.jpg",
+      "output_png": "results/demo/bike_helmet_side_by_side.png",
+      "vocabulary": [
+        "person",
+        "bicycle",
+        "helmet",
+        "sneakers"
+      ],
+      "vocab_words_without_coco80_class": [
+        "helmet",
+        "sneakers"
+      ],
+      "vocab_words_mapped_to_coco80": {},
+      "yolo_world": {
+        "model": "yolov8s-worldv2.pt",
+        "conf_threshold": 0.1,
+        "text_encoding_ms_once": 106.9,
+        "inference_ms_median": 114.18,
+        "predict_ms_median": 116.68,
+        "detections": [
+          {
+            "label": "person",
+            "conf": 0.9242,
+            "box_xyxy": [
+              122.5,
+              123.6,
+              254.7,
+              333.5
+            ]
+          },
+          {
+            "label": "bicycle",
+            "conf": 0.8445,
+            "box_xyxy": [
+              114.4,
+              179.4,
+              258.4,
+              404.9
+            ]
+          },
+          {
+            "label": "helmet",
+            "conf": 0.8303,
+            "box_xyxy": [
+              155.1,
+              124.1,
+              215.3,
+              168.6
+            ]
+          },
+          {
+            "label": "sneakers",
+            "conf": 0.5956,
+            "box_xyxy": [
+              211.3,
+              294.3,
+              239.4,
+              329.9
+            ]
+          },
+          {
+            "label": "sneakers",
+            "conf": 0.1252,
+            "box_xyxy": [
+              188.2,
+              314.2,
+              208.4,
+              337.7
+            ]
+          }
+        ],
+        "vocab_words_found": [
+          "bicycle",
+          "helmet",
+          "person",
+          "sneakers"
+        ],
+        "vocab_words_not_found": []
+      },
+      "yolov8_closed_set": {
+        "model": "yolov8s.pt",
+        "conf_threshold": 0.25,
+        "inference_ms_median": 98.14,
+        "predict_ms_median": 100.68,
+        "detections": [
+          {
+            "label": "person",
+            "conf": 0.8513,
+            "box_xyxy": [
+              117.6,
+              123.4,
+              255.4,
+              333.6
+            ]
+          },
+          {
+            "label": "bicycle",
+            "conf": 0.7024,
+            "box_xyxy": [
+              121.9,
+              184.4,
+              258.2,
+              404.5
+            ]
+          }
+        ]
+      },
+      "missed_by_yolo_world_but_found_by_yolov8": [],
+      "note": "",
+      "failure_case": false
+    },
+    {
+      "image": "demo/images/podcast_bear.jpg",
+      "output_png": "results/demo/podcast_bear_side_by_side.png",
+      "vocabulary": [
+        "teddy bear",
+        "glasses",
+        "microphone",
+        "keyboard",
+        "mouse",
+        "ipod"
+      ],
+      "vocab_words_without_coco80_class": [
+        "glasses",
+        "microphone",
+        "ipod"
+      ],
+      "vocab_words_mapped_to_coco80": {},
+      "yolo_world": {
+        "model": "yolov8s-worldv2.pt",
+        "conf_threshold": 0.1,
+        "text_encoding_ms_once": 141.1,
+        "inference_ms_median": 116.45,
+        "predict_ms_median": 119.13,
+        "detections": [
+          {
+            "label": "teddy bear",
+            "conf": 0.9485,
+            "box_xyxy": [
+              53.0,
+              20.8,
+              347.4,
+              355.1
+            ]
+          },
+          {
+            "label": "keyboard",
+            "conf": 0.8824,
+            "box_xyxy": [
+              64.4,
+              378.3,
+              347.1,
+              500.0
+            ]
+          },
+          {
+            "label": "ipod",
+            "conf": 0.6956,
+            "box_xyxy": [
+              169.8,
+              244.6,
+              237.6,
+              335.4
+            ]
+          },
+          {
+            "label": "glasses",
+            "conf": 0.6559,
+            "box_xyxy": [
+              106.1,
+              128.9,
+              240.7,
+              173.7
+            ]
+          },
+          {
+            "label": "microphone",
+            "conf": 0.2293,
+            "box_xyxy": [
+              239.5,
+              310.2,
+              345.5,
+              427.8
+            ]
+          },
+          {
+            "label": "mouse",
+            "conf": 0.168,
+            "box_xyxy": [
+              132.8,
+              330.2,
+              203.0,
+              385.7
+            ]
+          },
+          {
+            "label": "mouse",
+            "conf": 0.1312,
+            "box_xyxy": [
+              240.0,
+              310.1,
+              345.4,
+              426.5
+            ]
+          }
+        ],
+        "vocab_words_found": [
+          "glasses",
+          "ipod",
+          "keyboard",
+          "microphone",
+          "mouse",
+          "teddy bear"
+        ],
+        "vocab_words_not_found": []
+      },
+      "yolov8_closed_set": {
+        "model": "yolov8s.pt",
+        "conf_threshold": 0.25,
+        "inference_ms_median": 107.21,
+        "predict_ms_median": 110.8,
+        "detections": [
+          {
+            "label": "keyboard",
+            "conf": 0.902,
+            "box_xyxy": [
+              66.1,
+              377.9,
+              347.1,
+              499.8
+            ]
+          },
+          {
+            "label": "teddy bear",
+            "conf": 0.8572,
+            "box_xyxy": [
+              55.1,
+              30.7,
+              343.9,
+              356.9
+            ]
+          },
+          {
+            "label": "cell phone",
+            "conf": 0.5839,
+            "box_xyxy": [
+              169.9,
+              245.9,
+              237.6,
+              335.2
+            ]
+          }
+        ]
+      },
+      "missed_by_yolo_world_but_found_by_yolov8": [],
+      "note": "",
+      "failure_case": false
+    },
+    {
+      "image": "demo/images/flags_street.jpg",
+      "output_png": "results/demo/flags_street_side_by_side.png",
+      "vocabulary": [
+        "flag",
+        "street sign",
+        "traffic light",
+        "skyscraper"
+      ],
+      "vocab_words_without_coco80_class": [
+        "flag",
+        "street sign",
+        "skyscraper"
+      ],
+      "vocab_words_mapped_to_coco80": {},
+      "yolo_world": {
+        "model": "yolov8s-worldv2.pt",
+        "conf_threshold": 0.1,
+        "text_encoding_ms_once": 110.4,
+        "inference_ms_median": 125.83,
+        "predict_ms_median": 128.31,
+        "detections": [
+          {
+            "label": "street sign",
+            "conf": 0.9135,
+            "box_xyxy": [
+              73.6,
+              197.9,
+              294.2,
+              298.4
+            ]
+          },
+          {
+            "label": "flag",
+            "conf": 0.432,
+            "box_xyxy": [
+              338.9,
+              218.6,
+              479.8,
+              426.4
+            ]
+          },
+          {
+            "label": "street sign",
+            "conf": 0.3661,
+            "box_xyxy": [
+              0.0,
+              108.5,
+              68.5,
+              211.8
+            ]
+          },
+          {
+            "label": "skyscraper",
+            "conf": 0.3537,
+            "box_xyxy": [
+              394.3,
+              15.3,
+              628.6,
+              426.9
+            ]
+          },
+          {
+            "label": "traffic light",
+            "conf": 0.2446,
+            "box_xyxy": [
+              55.3,
+              256.2,
+              259.4,
+              426.4
+            ]
+          },
+          {
+            "label": "street sign",
+            "conf": 0.1738,
+            "box_xyxy": [
+              55.8,
+              255.4,
+              259.0,
+              426.3
+            ]
+          }
+        ],
+        "vocab_words_found": [
+          "flag",
+          "skyscraper",
+          "street sign",
+          "traffic light"
+        ],
+        "vocab_words_not_found": []
+      },
+      "yolov8_closed_set": {
+        "model": "yolov8s.pt",
+        "conf_threshold": 0.25,
+        "inference_ms_median": 108.92,
+        "predict_ms_median": 111.26,
+        "detections": [
+          {
+            "label": "traffic light",
+            "conf": 0.2581,
+            "box_xyxy": [
+              63.5,
+              255.9,
+              273.1,
+              423.2
+            ]
+          }
+        ]
+      },
+      "missed_by_yolo_world_but_found_by_yolov8": [],
+      "note": "",
+      "failure_case": false
+    },
+    {
+      "image": "demo/images/bedroom_lamp.jpg",
+      "output_png": "results/demo/bedroom_lamp_side_by_side.png",
+      "vocabulary": [
+        "lamp",
+        "bed",
+        "book",
+        "pillow",
+        "nightstand"
+      ],
+      "vocab_words_without_coco80_class": [
+        "lamp",
+        "pillow",
+        "nightstand"
+      ],
+      "vocab_words_mapped_to_coco80": {},
+      "yolo_world": {
+        "model": "yolov8s-worldv2.pt",
+        "conf_threshold": 0.1,
+        "text_encoding_ms_once": 130.9,
+        "inference_ms_median": 128.59,
+        "predict_ms_median": 131.2,
+        "detections": [
+          {
+            "label": "lamp",
+            "conf": 0.8961,
+            "box_xyxy": [
+              326.3,
+              0.3,
+              543.7,
+              479.9
+            ]
+          },
+          {
+            "label": "pillow",
+            "conf": 0.7943,
+            "box_xyxy": [
+              121.6,
+              160.8,
+              420.7,
+              326.0
+            ]
+          },
+          {
+            "label": "bed",
+            "conf": 0.6718,
+            "box_xyxy": [
+              0.0,
+              152.4,
+              438.5,
+              480.0
+            ]
+          },
+          {
+            "label": "book",
+            "conf": 0.6066,
+            "box_xyxy": [
+              173.1,
+              307.8,
+              305.1,
+              397.1
+            ]
+          },
+          {
+            "label": "nightstand",
+            "conf": 0.5249,
+            "box_xyxy": [
+              452.0,
+              341.6,
+              640.0,
+              480.0
+            ]
+          },
+          {
+            "label": "pillow",
+            "conf": 0.5151,
+            "box_xyxy": [
+              0.0,
+              149.7,
+              188.0,
+              239.7
+            ]
+          },
+          {
+            "label": "pillow",
+            "conf": 0.1125,
+            "box_xyxy": [
+              308.7,
+              234.7,
+              411.8,
+              325.0
+            ]
+          }
+        ],
+        "vocab_words_found": [
+          "bed",
+          "book",
+          "lamp",
+          "nightstand",
+          "pillow"
+        ],
+        "vocab_words_not_found": []
+      },
+      "yolov8_closed_set": {
+        "model": "yolov8s.pt",
+        "conf_threshold": 0.25,
+        "inference_ms_median": 111.93,
+        "predict_ms_median": 114.93,
+        "detections": [
+          {
+            "label": "bed",
+            "conf": 0.8351,
+            "box_xyxy": [
+              1.5,
+              146.2,
+              442.2,
+              479.6
+            ]
+          },
+          {
+            "label": "book",
+            "conf": 0.4295,
+            "box_xyxy": [
+              173.3,
+              306.5,
+              305.5,
+              397.4
+            ]
+          },
+          {
+            "label": "laptop",
+            "conf": 0.3225,
+            "box_xyxy": [
+              173.2,
+              306.6,
+              305.6,
+              397.3
+            ]
+          }
+        ]
+      },
+      "missed_by_yolo_world_but_found_by_yolov8": [],
+      "note": "",
+      "failure_case": false
+    },
+    {
+      "image": "demo/images/living_room.jpg",
+      "output_png": "results/demo/living_room_side_by_side.png",
+      "vocabulary": [
+        "piano",
+        "picture frame",
+        "sofa",
+        "coffee table",
+        "lamp"
+      ],
+      "vocab_words_without_coco80_class": [
+        "piano",
+        "picture frame",
+        "lamp"
+      ],
+      "vocab_words_mapped_to_coco80": {
+        "sofa": "couch",
+        "coffee table": "dining table"
+      },
+      "yolo_world": {
+        "model": "yolov8s-worldv2.pt",
+        "conf_threshold": 0.3,
+        "text_encoding_ms_once": 130.4,
+        "inference_ms_median": 133.93,
+        "predict_ms_median": 136.21,
+        "detections": [
+          {
+            "label": "coffee table",
+            "conf": 0.9546,
+            "box_xyxy": [
+              122.1,
+              485.3,
+              285.6,
+              614.8
+            ]
+          },
+          {
+            "label": "sofa",
+            "conf": 0.9424,
+            "box_xyxy": [
+              0.0,
+              490.4,
+              248.0,
+              639.7
+            ]
+          },
+          {
+            "label": "picture frame",
+            "conf": 0.9051,
+            "box_xyxy": [
+              311.9,
+              312.9,
+              345.2,
+              334.2
+            ]
+          },
+          {
+            "label": "picture frame",
+            "conf": 0.876,
+            "box_xyxy": [
+              358.1,
+              164.8,
+              434.5,
+              282.5
+            ]
+          },
+          {
+            "label": "lamp",
+            "conf": 0.819,
+            "box_xyxy": [
+              166.8,
+              317.1,
+              184.5,
+              368.8
+            ]
+          },
+          {
+            "label": "lamp",
+            "conf": 0.691,
+            "box_xyxy": [
+              190.1,
+              27.1,
+              267.3,
+              90.0
+            ]
+          },
+          {
+            "label": "piano",
+            "conf": 0.3948,
+            "box_xyxy": [
+              43.4,
+              363.8,
+              213.3,
+              483.1
+            ]
+          }
+        ],
+        "vocab_words_found": [
+          "coffee table",
+          "lamp",
+          "piano",
+          "picture frame",
+          "sofa"
+        ],
+        "vocab_words_not_found": []
+      },
+      "yolov8_closed_set": {
+        "model": "yolov8s.pt",
+        "conf_threshold": 0.25,
+        "inference_ms_median": 114.06,
+        "predict_ms_median": 116.97,
+        "detections": [
+          {
+            "label": "laptop",
+            "conf": 0.7999,
+            "box_xyxy": [
+              152.4,
+              506.8,
+              253.2,
+              552.6
+            ]
+          },
+          {
+            "label": "couch",
+            "conf": 0.4304,
+            "box_xyxy": [
+              0.0,
+              571.2,
+              247.9,
+              639.5
+            ]
+          },
+          {
+            "label": "remote",
+            "conf": 0.3779,
+            "box_xyxy": [
+              188.5,
+              485.6,
+              218.3,
+              497.3
+            ]
+          },
+          {
+            "label": "bottle",
+            "conf": 0.3581,
+            "box_xyxy": [
+              411.0,
+              465.8,
+              421.3,
+              514.1
+            ]
+          },
+          {
+            "label": "bowl",
+            "conf": 0.3429,
+            "box_xyxy": [
+              434.9,
+              329.8,
+              456.0,
+              339.3
+            ]
+          },
+          {
+            "label": "couch",
+            "conf": 0.307,
+            "box_xyxy": [
+              0.0,
+              492.9,
+              247.5,
+              639.6
+            ]
+          },
+          {
+            "label": "dining table",
+            "conf": 0.3033,
+            "box_xyxy": [
+              122.7,
+              484.1,
+              286.2,
+              614.2
+            ]
+          },
+          {
+            "label": "bottle",
+            "conf": 0.2885,
+            "box_xyxy": [
+              383.5,
+              457.2,
+              397.6,
+              508.9
+            ]
+          }
+        ]
+      },
+      "missed_by_yolo_world_but_found_by_yolov8": [],
+      "note": "Threshold raised to 0.3 to hide weak duplicates. Adding 'fireplace' to this vocabulary makes YOLO-World-S label the piano as 'fireplace' (0.51) - a second, milder failure mode.",
+      "failure_case": false
+    },
+    {
+      "image": "demo/images/statue_bench.jpg",
+      "output_png": "results/demo/statue_bench_side_by_side.png",
+      "vocabulary": [
+        "statue",
+        "person",
+        "bench",
+        "handbag"
+      ],
+      "vocab_words_without_coco80_class": [
+        "statue"
+      ],
+      "vocab_words_mapped_to_coco80": {},
+      "yolo_world": {
+        "model": "yolov8s-worldv2.pt",
+        "conf_threshold": 0.1,
+        "text_encoding_ms_once": 114.4,
+        "inference_ms_median": 120.38,
+        "predict_ms_median": 122.53,
+        "detections": [
+          {
+            "label": "person",
+            "conf": 0.8594,
+            "box_xyxy": [
+              89.0,
+              44.0,
+              130.9,
+              190.2
+            ]
+          },
+          {
+            "label": "person",
+            "conf": 0.8512,
+            "box_xyxy": [
+              319.6,
+              20.0,
+              465.5,
+              368.2
+            ]
+          },
+          {
+            "label": "person",
+            "conf": 0.7409,
+            "box_xyxy": [
+              38.0,
+              52.5,
+              85.8,
+              191.2
+            ]
+          },
+          {
+            "label": "person",
+            "conf": 0.704,
+            "box_xyxy": [
+              223.2,
+              26.4,
+              407.8,
+              368.8
+            ]
+          },
+          {
+            "label": "person",
+            "conf": 0.6641,
+            "box_xyxy": [
+              142.9,
+              37.0,
+              191.0,
+              171.9
+            ]
+          },
+          {
+            "label": "handbag",
+            "conf": 0.6485,
+            "box_xyxy": [
+              282.6,
+              347.0,
+              400.6,
+              438.2
+            ]
+          },
+          {
+            "label": "person",
+            "conf": 0.5843,
+            "box_xyxy": [
+              6.0,
+              84.8,
+              61.9,
+              214.8
+            ]
+          },
+          {
+            "label": "handbag",
+            "conf": 0.3053,
+            "box_xyxy": [
+              448.9,
+              260.7,
+              516.3,
+              365.2
+            ]
+          }
+        ],
+        "vocab_words_found": [
+          "handbag",
+          "person"
+        ],
+        "vocab_words_not_found": [
+          "statue",
+          "bench"
+        ]
+      },
+      "yolov8_closed_set": {
+        "model": "yolov8s.pt",
+        "conf_threshold": 0.25,
+        "inference_ms_median": 107.84,
+        "predict_ms_median": 110.43,
+        "detections": [
+          {
+            "label": "person",
+            "conf": 0.8424,
+            "box_xyxy": [
+              88.8,
+              42.8,
+              130.7,
+              189.3
+            ]
+          },
+          {
+            "label": "person",
+            "conf": 0.8277,
+            "box_xyxy": [
+              323.5,
+              20.8,
+              463.8,
+              368.8
+            ]
+          },
+          {
+            "label": "person",
+            "conf": 0.7884,
+            "box_xyxy": [
+              158.1,
+              36.4,
+              190.9,
+              171.9
+            ]
+          },
+          {
+            "label": "person",
+            "conf": 0.7821,
+            "box_xyxy": [
+              38.5,
+              57.7,
+              85.7,
+              190.8
+            ]
+          },
+          {
+            "label": "bench",
+            "conf": 0.6607,
+            "box_xyxy": [
+              48.1,
+              223.5,
+              320.3,
+              431.3
+            ]
+          },
+          {
+            "label": "person",
+            "conf": 0.6595,
+            "box_xyxy": [
+              8.2,
+              88.7,
+              60.7,
+              214.9
+            ]
+          },
+          {
+            "label": "person",
+            "conf": 0.4371,
+            "box_xyxy": [
+              223.0,
+              26.2,
+              418.3,
+              368.9
+            ]
+          },
+          {
+            "label": "motorcycle",
+            "conf": 0.4108,
+            "box_xyxy": [
+              496.8,
+              49.5,
+              530.9,
+              101.8
+            ]
+          }
+        ]
+      },
+      "missed_by_yolo_world_but_found_by_yolov8": [
+        "bench"
+      ],
+      "note": "Deliberate failure case: the bronze statues are labelled 'person' (by both models) and 'statue' is never output while 'person' is also in the vocabulary. Region-text matching picks the more frequent training concept; try removing 'person' from the vocabulary live.",
+      "failure_case": true
+    }
+  ]
+}
