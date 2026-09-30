@@ -1,0 +1,580 @@
+{
+ "_doc": {
+  "variants": {
+   "name": "exact COCO category name from instances_val2017.json",
+   "synonym": "one alternative wording per class, see synonym_kind",
+   "description": "short descriptive phrase that includes the class noun plus visual attributes",
+   "template": "CLIP-style template 'a photo of a {name}' (literal, no a/an correction)"
+  },
+  "synonym_kind": {
+   "synonym": "true dictionary synonym",
+   "expansion": "unabbreviated form of the COCO name (e.g. tv -> television)",
+   "near": "near-synonym, common subtype or regional term (not exactly equivalent)",
+   "spelling": "alternative spelling",
+   "scientific": "scientific (Latin) name",
+   "weak": "no real English synonym exists; closest alternative wording (expected to hurt)"
+  }
+ },
+ "classes": [
+  {
+   "name": "person",
+   "synonym": "human",
+   "synonym_kind": "synonym",
+   "description": "a person standing or walking",
+   "template": "a photo of a person"
+  },
+  {
+   "name": "bicycle",
+   "synonym": "bike",
+   "synonym_kind": "synonym",
+   "description": "a two-wheeled pedal bicycle",
+   "template": "a photo of a bicycle"
+  },
+  {
+   "name": "car",
+   "synonym": "automobile",
+   "synonym_kind": "synonym",
+   "description": "a passenger car on the road",
+   "template": "a photo of a car"
+  },
+  {
+   "name": "motorcycle",
+   "synonym": "motorbike",
+   "synonym_kind": "synonym",
+   "description": "a motorcycle with two wheels and an engine",
+   "template": "a photo of a motorcycle"
+  },
+  {
+   "name": "airplane",
+   "synonym": "aeroplane",
+   "synonym_kind": "synonym",
+   "description": "a large passenger airplane with wings",
+   "template": "a photo of a airplane"
+  },
+  {
+   "name": "bus",
+   "synonym": "omnibus",
+   "synonym_kind": "synonym",
+   "description": "a large public transit bus",
+   "template": "a photo of a bus"
+  },
+  {
+   "name": "train",
+   "synonym": "locomotive",
+   "synonym_kind": "near",
+   "description": "a long passenger train on railway tracks",
+   "template": "a photo of a train"
+  },
+  {
+   "name": "truck",
+   "synonym": "lorry",
+   "synonym_kind": "synonym",
+   "description": "a large cargo truck",
+   "template": "a photo of a truck"
+  },
+  {
+   "name": "boat",
+   "synonym": "ship",
+   "synonym_kind": "near",
+   "description": "a small boat floating on water",
+   "template": "a photo of a boat"
+  },
+  {
+   "name": "traffic light",
+   "synonym": "traffic signal",
+   "synonym_kind": "synonym",
+   "description": "a traffic light with red, yellow and green lamps",
+   "template": "a photo of a traffic light"
+  },
+  {
+   "name": "fire hydrant",
+   "synonym": "fireplug",
+   "synonym_kind": "synonym",
+   "description": "a red fire hydrant on the sidewalk",
+   "template": "a photo of a fire hydrant"
+  },
+  {
+   "name": "stop sign",
+   "synonym": "halt sign",
+   "synonym_kind": "near",
+   "description": "a red octagonal stop sign",
+   "template": "a photo of a stop sign"
+  },
+  {
+   "name": "parking meter",
+   "synonym": "parking timer",
+   "synonym_kind": "weak",
+   "description": "a coin-operated parking meter on a pole",
+   "template": "a photo of a parking meter"
+  },
+  {
+   "name": "bench",
+   "synonym": "long seat",
+   "synonym_kind": "weak",
+   "description": "a wooden park bench",
+   "template": "a photo of a bench"
+  },
+  {
+   "name": "bird",
+   "synonym": "fowl",
+   "synonym_kind": "near",
+   "description": "a small bird with feathers and a beak",
+   "template": "a photo of a bird"
+  },
+  {
+   "name": "cat",
+   "synonym": "kitty",
+   "synonym_kind": "synonym",
+   "description": "a domestic cat with whiskers",
+   "template": "a photo of a cat"
+  },
+  {
+   "name": "dog",
+   "synonym": "hound",
+   "synonym_kind": "near",
+   "description": "a pet dog with four legs",
+   "template": "a photo of a dog"
+  },
+  {
+   "name": "horse",
+   "synonym": "steed",
+   "synonym_kind": "synonym",
+   "description": "a brown horse with a mane",
+   "template": "a photo of a horse"
+  },
+  {
+   "name": "sheep",
+   "synonym": "lamb",
+   "synonym_kind": "near",
+   "description": "a woolly white sheep",
+   "template": "a photo of a sheep"
+  },
+  {
+   "name": "cow",
+   "synonym": "cattle",
+   "synonym_kind": "synonym",
+   "description": "a cow grazing in a field",
+   "template": "a photo of a cow"
+  },
+  {
+   "name": "elephant",
+   "synonym": "pachyderm",
+   "synonym_kind": "synonym",
+   "description": "a grey elephant with a trunk and tusks",
+   "template": "a photo of a elephant"
+  },
+  {
+   "name": "bear",
+   "synonym": "bruin",
+   "synonym_kind": "synonym",
+   "description": "a large furry brown bear",
+   "template": "a photo of a bear"
+  },
+  {
+   "name": "zebra",
+   "synonym": "Equus quagga",
+   "synonym_kind": "scientific",
+   "description": "a zebra with black and white stripes",
+   "template": "a photo of a zebra"
+  },
+  {
+   "name": "giraffe",
+   "synonym": "camelopard",
+   "synonym_kind": "synonym",
+   "description": "a tall giraffe with a long neck and spots",
+   "template": "a photo of a giraffe"
+  },
+  {
+   "name": "backpack",
+   "synonym": "rucksack",
+   "synonym_kind": "synonym",
+   "description": "a backpack worn on the shoulders",
+   "template": "a photo of a backpack"
+  },
+  {
+   "name": "umbrella",
+   "synonym": "brolly",
+   "synonym_kind": "synonym",
+   "description": "an open umbrella for rain",
+   "template": "a photo of a umbrella"
+  },
+  {
+   "name": "handbag",
+   "synonym": "purse",
+   "synonym_kind": "synonym",
+   "description": "a leather handbag carried by hand",
+   "template": "a photo of a handbag"
+  },
+  {
+   "name": "tie",
+   "synonym": "necktie",
+   "synonym_kind": "expansion",
+   "description": "a necktie worn with a shirt collar",
+   "template": "a photo of a tie"
+  },
+  {
+   "name": "suitcase",
+   "synonym": "luggage",
+   "synonym_kind": "near",
+   "description": "a rolling suitcase for travel",
+   "template": "a photo of a suitcase"
+  },
+  {
+   "name": "frisbee",
+   "synonym": "flying disc",
+   "synonym_kind": "synonym",
+   "description": "a plastic frisbee disc thrown in the air",
+   "template": "a photo of a frisbee"
+  },
+  {
+   "name": "skis",
+   "synonym": "snow runners",
+   "synonym_kind": "weak",
+   "description": "a pair of long skis on snow",
+   "template": "a photo of a skis"
+  },
+  {
+   "name": "snowboard",
+   "synonym": "snow deck",
+   "synonym_kind": "weak",
+   "description": "a snowboard for riding down snowy slopes",
+   "template": "a photo of a snowboard"
+  },
+  {
+   "name": "sports ball",
+   "synonym": "ball",
+   "synonym_kind": "near",
+   "description": "a round sports ball such as a soccer ball or tennis ball",
+   "template": "a photo of a sports ball"
+  },
+  {
+   "name": "kite",
+   "synonym": "windborne toy",
+   "synonym_kind": "weak",
+   "description": "a colorful kite flying in the sky",
+   "template": "a photo of a kite"
+  },
+  {
+   "name": "baseball bat",
+   "synonym": "club",
+   "synonym_kind": "weak",
+   "description": "a wooden baseball bat",
+   "template": "a photo of a baseball bat"
+  },
+  {
+   "name": "baseball glove",
+   "synonym": "mitt",
+   "synonym_kind": "synonym",
+   "description": "a leather baseball glove",
+   "template": "a photo of a baseball glove"
+  },
+  {
+   "name": "skateboard",
+   "synonym": "skate deck",
+   "synonym_kind": "synonym",
+   "description": "a skateboard with four small wheels",
+   "template": "a photo of a skateboard"
+  },
+  {
+   "name": "surfboard",
+   "synonym": "wave board",
+   "synonym_kind": "weak",
+   "description": "a long surfboard for riding waves",
+   "template": "a photo of a surfboard"
+  },
+  {
+   "name": "tennis racket",
+   "synonym": "racquet",
+   "synonym_kind": "spelling",
+   "description": "a tennis racket with strings",
+   "template": "a photo of a tennis racket"
+  },
+  {
+   "name": "bottle",
+   "synonym": "flask",
+   "synonym_kind": "near",
+   "description": "a glass or plastic bottle",
+   "template": "a photo of a bottle"
+  },
+  {
+   "name": "wine glass",
+   "synonym": "goblet",
+   "synonym_kind": "near",
+   "description": "a stemmed wine glass",
+   "template": "a photo of a wine glass"
+  },
+  {
+   "name": "cup",
+   "synonym": "mug",
+   "synonym_kind": "near",
+   "description": "a cup for coffee or tea",
+   "template": "a photo of a cup"
+  },
+  {
+   "name": "fork",
+   "synonym": "tined utensil",
+   "synonym_kind": "weak",
+   "description": "a metal fork for eating",
+   "template": "a photo of a fork"
+  },
+  {
+   "name": "knife",
+   "synonym": "blade",
+   "synonym_kind": "near",
+   "description": "a kitchen knife with a sharp blade",
+   "template": "a photo of a knife"
+  },
+  {
+   "name": "spoon",
+   "synonym": "scoop",
+   "synonym_kind": "weak",
+   "description": "a metal spoon for eating",
+   "template": "a photo of a spoon"
+  },
+  {
+   "name": "bowl",
+   "synonym": "basin",
+   "synonym_kind": "near",
+   "description": "a round bowl for food",
+   "template": "a photo of a bowl"
+  },
+  {
+   "name": "banana",
+   "synonym": "plantain",
+   "synonym_kind": "near",
+   "description": "a yellow banana",
+   "template": "a photo of a banana"
+  },
+  {
+   "name": "apple",
+   "synonym": "pome",
+   "synonym_kind": "weak",
+   "description": "a red or green apple",
+   "template": "a photo of a apple"
+  },
+  {
+   "name": "sandwich",
+   "synonym": "hoagie",
+   "synonym_kind": "near",
+   "description": "a sandwich with bread and filling",
+   "template": "a photo of a sandwich"
+  },
+  {
+   "name": "orange",
+   "synonym": "citrus fruit",
+   "synonym_kind": "weak",
+   "description": "an orange citrus fruit",
+   "template": "a photo of a orange"
+  },
+  {
+   "name": "broccoli",
+   "synonym": "calabrese",
+   "synonym_kind": "synonym",
+   "description": "green broccoli florets",
+   "template": "a photo of a broccoli"
+  },
+  {
+   "name": "carrot",
+   "synonym": "Daucus carota",
+   "synonym_kind": "scientific",
+   "description": "an orange carrot",
+   "template": "a photo of a carrot"
+  },
+  {
+   "name": "hot dog",
+   "synonym": "frankfurter",
+   "synonym_kind": "synonym",
+   "description": "a hot dog sausage in a bun",
+   "template": "a photo of a hot dog"
+  },
+  {
+   "name": "pizza",
+   "synonym": "pie",
+   "synonym_kind": "weak",
+   "description": "a round pizza with cheese and toppings",
+   "template": "a photo of a pizza"
+  },
+  {
+   "name": "donut",
+   "synonym": "cruller",
+   "synonym_kind": "near",
+   "description": "a round glazed donut",
+   "template": "a photo of a donut"
+  },
+  {
+   "name": "cake",
+   "synonym": "gateau",
+   "synonym_kind": "synonym",
+   "description": "a frosted cake",
+   "template": "a photo of a cake"
+  },
+  {
+   "name": "chair",
+   "synonym": "seat",
+   "synonym_kind": "near",
+   "description": "a chair with four legs and a backrest",
+   "template": "a photo of a chair"
+  },
+  {
+   "name": "couch",
+   "synonym": "sofa",
+   "synonym_kind": "synonym",
+   "description": "a couch with cushions in a living room",
+   "template": "a photo of a couch"
+  },
+  {
+   "name": "potted plant",
+   "synonym": "houseplant",
+   "synonym_kind": "synonym",
+   "description": "a green potted plant in a pot",
+   "template": "a photo of a potted plant"
+  },
+  {
+   "name": "bed",
+   "synonym": "cot",
+   "synonym_kind": "near",
+   "description": "a bed with pillows and blankets",
+   "template": "a photo of a bed"
+  },
+  {
+   "name": "dining table",
+   "synonym": "dinner table",
+   "synonym_kind": "synonym",
+   "description": "a dining table set for a meal",
+   "template": "a photo of a dining table"
+  },
+  {
+   "name": "toilet",
+   "synonym": "lavatory",
+   "synonym_kind": "synonym",
+   "description": "a white porcelain toilet",
+   "template": "a photo of a toilet"
+  },
+  {
+   "name": "tv",
+   "synonym": "television",
+   "synonym_kind": "expansion",
+   "description": "a flat-screen tv",
+   "template": "a photo of a tv"
+  },
+  {
+   "name": "laptop",
+   "synonym": "notebook computer",
+   "synonym_kind": "synonym",
+   "description": "an open laptop computer",
+   "template": "a photo of a laptop"
+  },
+  {
+   "name": "mouse",
+   "synonym": "computer mouse",
+   "synonym_kind": "expansion",
+   "description": "a computer mouse on a desk",
+   "template": "a photo of a mouse"
+  },
+  {
+   "name": "remote",
+   "synonym": "remote control",
+   "synonym_kind": "expansion",
+   "description": "a tv remote with buttons",
+   "template": "a photo of a remote"
+  },
+  {
+   "name": "keyboard",
+   "synonym": "keypad",
+   "synonym_kind": "near",
+   "description": "a computer keyboard with keys",
+   "template": "a photo of a keyboard"
+  },
+  {
+   "name": "cell phone",
+   "synonym": "mobile phone",
+   "synonym_kind": "synonym",
+   "description": "a smartphone cell phone",
+   "template": "a photo of a cell phone"
+  },
+  {
+   "name": "microwave",
+   "synonym": "microwave oven",
+   "synonym_kind": "expansion",
+   "description": "a kitchen microwave with a door",
+   "template": "a photo of a microwave"
+  },
+  {
+   "name": "oven",
+   "synonym": "cooker",
+   "synonym_kind": "synonym",
+   "description": "a kitchen oven",
+   "template": "a photo of a oven"
+  },
+  {
+   "name": "toaster",
+   "synonym": "toast maker",
+   "synonym_kind": "weak",
+   "description": "a kitchen toaster with bread slots",
+   "template": "a photo of a toaster"
+  },
+  {
+   "name": "sink",
+   "synonym": "washbasin",
+   "synonym_kind": "synonym",
+   "description": "a kitchen or bathroom sink with a faucet",
+   "template": "a photo of a sink"
+  },
+  {
+   "name": "refrigerator",
+   "synonym": "fridge",
+   "synonym_kind": "synonym",
+   "description": "a tall kitchen refrigerator",
+   "template": "a photo of a refrigerator"
+  },
+  {
+   "name": "book",
+   "synonym": "tome",
+   "synonym_kind": "near",
+   "description": "a book with pages and a cover",
+   "template": "a photo of a book"
+  },
+  {
+   "name": "clock",
+   "synonym": "timepiece",
+   "synonym_kind": "synonym",
+   "description": "a round wall clock with hands",
+   "template": "a photo of a clock"
+  },
+  {
+   "name": "vase",
+   "synonym": "urn",
+   "synonym_kind": "near",
+   "description": "a decorative vase for flowers",
+   "template": "a photo of a vase"
+  },
+  {
+   "name": "scissors",
+   "synonym": "shears",
+   "synonym_kind": "synonym",
+   "description": "a pair of scissors with two blades",
+   "template": "a photo of a scissors"
+  },
+  {
+   "name": "teddy bear",
+   "synonym": "teddy",
+   "synonym_kind": "synonym",
+   "description": "a soft plush teddy bear toy",
+   "template": "a photo of a teddy bear"
+  },
+  {
+   "name": "hair drier",
+   "synonym": "blow dryer",
+   "synonym_kind": "synonym",
+   "description": "a handheld hair drier",
+   "template": "a photo of a hair drier"
+  },
+  {
+   "name": "toothbrush",
+   "synonym": "dental brush",
+   "synonym_kind": "weak",
+   "description": "a toothbrush with bristles",
+   "template": "a photo of a toothbrush"
+  }
+ ]
+}
