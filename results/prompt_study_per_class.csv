@@ -1,0 +1,641 @@
+model,n_images,condition,class,prompt,synonym_kind,AP
+yolov8s-worldv2,500,name,person,person,synonym,55.93
+yolov8s-worldv2,500,name,bicycle,bicycle,synonym,32.54
+yolov8s-worldv2,500,name,car,car,synonym,44.8
+yolov8s-worldv2,500,name,motorcycle,motorcycle,synonym,30.07
+yolov8s-worldv2,500,name,airplane,airplane,synonym,71.97
+yolov8s-worldv2,500,name,bus,bus,synonym,55.57
+yolov8s-worldv2,500,name,train,train,near,69.68
+yolov8s-worldv2,500,name,truck,truck,synonym,27.93
+yolov8s-worldv2,500,name,boat,boat,near,31.23
+yolov8s-worldv2,500,name,traffic light,traffic light,synonym,18.22
+yolov8s-worldv2,500,name,fire hydrant,fire hydrant,synonym,73.41
+yolov8s-worldv2,500,name,stop sign,stop sign,near,50.91
+yolov8s-worldv2,500,name,parking meter,parking meter,weak,9.36
+yolov8s-worldv2,500,name,bench,bench,weak,46.5
+yolov8s-worldv2,500,name,bird,bird,near,30.53
+yolov8s-worldv2,500,name,cat,cat,synonym,67.35
+yolov8s-worldv2,500,name,dog,dog,near,48.36
+yolov8s-worldv2,500,name,horse,horse,synonym,67.23
+yolov8s-worldv2,500,name,sheep,sheep,near,60.7
+yolov8s-worldv2,500,name,cow,cow,synonym,53.95
+yolov8s-worldv2,500,name,elephant,elephant,synonym,67.05
+yolov8s-worldv2,500,name,bear,bear,synonym,91.04
+yolov8s-worldv2,500,name,zebra,zebra,scientific,59.7
+yolov8s-worldv2,500,name,giraffe,giraffe,synonym,69.25
+yolov8s-worldv2,500,name,backpack,backpack,synonym,13.85
+yolov8s-worldv2,500,name,umbrella,umbrella,synonym,31.64
+yolov8s-worldv2,500,name,handbag,handbag,synonym,12.86
+yolov8s-worldv2,500,name,tie,tie,expansion,27.5
+yolov8s-worldv2,500,name,suitcase,suitcase,near,29.46
+yolov8s-worldv2,500,name,frisbee,frisbee,synonym,42.38
+yolov8s-worldv2,500,name,skis,skis,weak,15.3
+yolov8s-worldv2,500,name,snowboard,snowboard,weak,15.69
+yolov8s-worldv2,500,name,sports ball,sports ball,near,34.68
+yolov8s-worldv2,500,name,kite,kite,weak,40.05
+yolov8s-worldv2,500,name,baseball bat,baseball bat,weak,17.66
+yolov8s-worldv2,500,name,baseball glove,baseball glove,synonym,52.34
+yolov8s-worldv2,500,name,skateboard,skateboard,synonym,58.75
+yolov8s-worldv2,500,name,surfboard,surfboard,weak,56.6
+yolov8s-worldv2,500,name,tennis racket,tennis racket,spelling,42.2
+yolov8s-worldv2,500,name,bottle,bottle,near,26.4
+yolov8s-worldv2,500,name,wine glass,wine glass,near,17.46
+yolov8s-worldv2,500,name,cup,cup,near,48.2
+yolov8s-worldv2,500,name,fork,fork,weak,33.59
+yolov8s-worldv2,500,name,knife,knife,near,8.35
+yolov8s-worldv2,500,name,spoon,spoon,weak,8.52
+yolov8s-worldv2,500,name,bowl,bowl,near,49.22
+yolov8s-worldv2,500,name,banana,banana,near,14.98
+yolov8s-worldv2,500,name,apple,apple,weak,29.89
+yolov8s-worldv2,500,name,sandwich,sandwich,near,41.96
+yolov8s-worldv2,500,name,orange,orange,weak,4.64
+yolov8s-worldv2,500,name,broccoli,broccoli,synonym,19.79
+yolov8s-worldv2,500,name,carrot,carrot,scientific,4.29
+yolov8s-worldv2,500,name,hot dog,hot dog,synonym,28.49
+yolov8s-worldv2,500,name,pizza,pizza,weak,49.28
+yolov8s-worldv2,500,name,donut,donut,near,34.37
+yolov8s-worldv2,500,name,cake,cake,synonym,43.64
+yolov8s-worldv2,500,name,chair,chair,near,29.37
+yolov8s-worldv2,500,name,couch,couch,synonym,46.2
+yolov8s-worldv2,500,name,potted plant,potted plant,synonym,21.67
+yolov8s-worldv2,500,name,bed,bed,near,42.96
+yolov8s-worldv2,500,name,dining table,dining table,synonym,30.7
+yolov8s-worldv2,500,name,toilet,toilet,synonym,61.54
+yolov8s-worldv2,500,name,tv,tv,expansion,60.99
+yolov8s-worldv2,500,name,laptop,laptop,synonym,47.76
+yolov8s-worldv2,500,name,mouse,mouse,expansion,44.58
+yolov8s-worldv2,500,name,remote,remote,expansion,18.32
+yolov8s-worldv2,500,name,keyboard,keyboard,near,41.5
+yolov8s-worldv2,500,name,cell phone,cell phone,synonym,25.67
+yolov8s-worldv2,500,name,microwave,microwave,expansion,69.87
+yolov8s-worldv2,500,name,oven,oven,synonym,7.61
+yolov8s-worldv2,500,name,toaster,toaster,weak,56.44
+yolov8s-worldv2,500,name,sink,sink,synonym,34.71
+yolov8s-worldv2,500,name,refrigerator,refrigerator,synonym,60.75
+yolov8s-worldv2,500,name,book,book,near,6.81
+yolov8s-worldv2,500,name,clock,clock,synonym,50.05
+yolov8s-worldv2,500,name,vase,vase,near,26.67
+yolov8s-worldv2,500,name,scissors,scissors,synonym,
+yolov8s-worldv2,500,name,teddy bear,teddy bear,synonym,50.74
+yolov8s-worldv2,500,name,hair drier,hair drier,synonym,
+yolov8s-worldv2,500,name,toothbrush,toothbrush,weak,22.59
+yolov8s-worldv2,500,synonym,person,human,synonym,50.11
+yolov8s-worldv2,500,synonym,bicycle,bike,synonym,26.83
+yolov8s-worldv2,500,synonym,car,automobile,synonym,39.9
+yolov8s-worldv2,500,synonym,motorcycle,motorbike,synonym,30.07
+yolov8s-worldv2,500,synonym,airplane,aeroplane,synonym,70.16
+yolov8s-worldv2,500,synonym,bus,omnibus,synonym,40.5
+yolov8s-worldv2,500,synonym,train,locomotive,near,54.32
+yolov8s-worldv2,500,synonym,truck,lorry,synonym,18.4
+yolov8s-worldv2,500,synonym,boat,ship,near,25.15
+yolov8s-worldv2,500,synonym,traffic light,traffic signal,synonym,12.24
+yolov8s-worldv2,500,synonym,fire hydrant,fireplug,synonym,67.88
+yolov8s-worldv2,500,synonym,stop sign,halt sign,near,20.87
+yolov8s-worldv2,500,synonym,parking meter,parking timer,weak,0.06
+yolov8s-worldv2,500,synonym,bench,long seat,weak,23.62
+yolov8s-worldv2,500,synonym,bird,fowl,near,24.97
+yolov8s-worldv2,500,synonym,cat,kitty,synonym,63.18
+yolov8s-worldv2,500,synonym,dog,hound,near,41.67
+yolov8s-worldv2,500,synonym,horse,steed,synonym,20.34
+yolov8s-worldv2,500,synonym,sheep,lamb,near,45.85
+yolov8s-worldv2,500,synonym,cow,cattle,synonym,41.27
+yolov8s-worldv2,500,synonym,elephant,pachyderm,synonym,55.1
+yolov8s-worldv2,500,synonym,bear,bruin,synonym,38.61
+yolov8s-worldv2,500,synonym,zebra,Equus quagga,scientific,13.92
+yolov8s-worldv2,500,synonym,giraffe,camelopard,synonym,12.93
+yolov8s-worldv2,500,synonym,backpack,rucksack,synonym,10.75
+yolov8s-worldv2,500,synonym,umbrella,brolly,synonym,29.13
+yolov8s-worldv2,500,synonym,handbag,purse,synonym,15.09
+yolov8s-worldv2,500,synonym,tie,necktie,expansion,21.47
+yolov8s-worldv2,500,synonym,suitcase,luggage,near,44.37
+yolov8s-worldv2,500,synonym,frisbee,flying disc,synonym,23.55
+yolov8s-worldv2,500,synonym,skis,snow runners,weak,0.01
+yolov8s-worldv2,500,synonym,snowboard,snow deck,weak,0.43
+yolov8s-worldv2,500,synonym,sports ball,ball,near,33.43
+yolov8s-worldv2,500,synonym,kite,windborne toy,weak,4.43
+yolov8s-worldv2,500,synonym,baseball bat,club,weak,0.0
+yolov8s-worldv2,500,synonym,baseball glove,mitt,synonym,38.47
+yolov8s-worldv2,500,synonym,skateboard,skate deck,synonym,60.42
+yolov8s-worldv2,500,synonym,surfboard,wave board,weak,24.51
+yolov8s-worldv2,500,synonym,tennis racket,racquet,spelling,40.23
+yolov8s-worldv2,500,synonym,bottle,flask,near,8.63
+yolov8s-worldv2,500,synonym,wine glass,goblet,near,11.09
+yolov8s-worldv2,500,synonym,cup,mug,near,29.33
+yolov8s-worldv2,500,synonym,fork,tined utensil,weak,18.26
+yolov8s-worldv2,500,synonym,knife,blade,near,0.0
+yolov8s-worldv2,500,synonym,spoon,scoop,weak,0.0
+yolov8s-worldv2,500,synonym,bowl,basin,near,4.14
+yolov8s-worldv2,500,synonym,banana,plantain,near,5.78
+yolov8s-worldv2,500,synonym,apple,pome,weak,0.0
+yolov8s-worldv2,500,synonym,sandwich,hoagie,near,8.47
+yolov8s-worldv2,500,synonym,orange,citrus fruit,weak,11.82
+yolov8s-worldv2,500,synonym,broccoli,calabrese,synonym,0.42
+yolov8s-worldv2,500,synonym,carrot,Daucus carota,scientific,1.25
+yolov8s-worldv2,500,synonym,hot dog,frankfurter,synonym,4.84
+yolov8s-worldv2,500,synonym,pizza,pie,weak,42.89
+yolov8s-worldv2,500,synonym,donut,cruller,near,20.26
+yolov8s-worldv2,500,synonym,cake,gateau,synonym,30.63
+yolov8s-worldv2,500,synonym,chair,seat,near,2.45
+yolov8s-worldv2,500,synonym,couch,sofa,synonym,42.64
+yolov8s-worldv2,500,synonym,potted plant,houseplant,synonym,19.83
+yolov8s-worldv2,500,synonym,bed,cot,near,22.18
+yolov8s-worldv2,500,synonym,dining table,dinner table,synonym,30.94
+yolov8s-worldv2,500,synonym,toilet,lavatory,synonym,28.51
+yolov8s-worldv2,500,synonym,tv,television,expansion,54.34
+yolov8s-worldv2,500,synonym,laptop,notebook computer,synonym,47.5
+yolov8s-worldv2,500,synonym,mouse,computer mouse,expansion,42.73
+yolov8s-worldv2,500,synonym,remote,remote control,expansion,16.21
+yolov8s-worldv2,500,synonym,keyboard,keypad,near,17.51
+yolov8s-worldv2,500,synonym,cell phone,mobile phone,synonym,24.04
+yolov8s-worldv2,500,synonym,microwave,microwave oven,expansion,65.64
+yolov8s-worldv2,500,synonym,oven,cooker,synonym,4.54
+yolov8s-worldv2,500,synonym,toaster,toast maker,weak,6.36
+yolov8s-worldv2,500,synonym,sink,washbasin,synonym,9.32
+yolov8s-worldv2,500,synonym,refrigerator,fridge,synonym,58.73
+yolov8s-worldv2,500,synonym,book,tome,near,0.35
+yolov8s-worldv2,500,synonym,clock,timepiece,synonym,48.04
+yolov8s-worldv2,500,synonym,vase,urn,near,5.82
+yolov8s-worldv2,500,synonym,scissors,shears,synonym,
+yolov8s-worldv2,500,synonym,teddy bear,teddy,synonym,49.82
+yolov8s-worldv2,500,synonym,hair drier,blow dryer,synonym,
+yolov8s-worldv2,500,synonym,toothbrush,dental brush,weak,20.94
+yolov8s-worldv2,500,description,person,a person standing or walking,synonym,46.11
+yolov8s-worldv2,500,description,bicycle,a two-wheeled pedal bicycle,synonym,26.52
+yolov8s-worldv2,500,description,car,a passenger car on the road,synonym,31.41
+yolov8s-worldv2,500,description,motorcycle,a motorcycle with two wheels and an engine,synonym,33.04
+yolov8s-worldv2,500,description,airplane,a large passenger airplane with wings,synonym,65.79
+yolov8s-worldv2,500,description,bus,a large public transit bus,synonym,49.61
+yolov8s-worldv2,500,description,train,a long passenger train on railway tracks,near,65.88
+yolov8s-worldv2,500,description,truck,a large cargo truck,synonym,16.05
+yolov8s-worldv2,500,description,boat,a small boat floating on water,near,23.43
+yolov8s-worldv2,500,description,traffic light,"a traffic light with red, yellow and green lamps",synonym,8.69
+yolov8s-worldv2,500,description,fire hydrant,a red fire hydrant on the sidewalk,synonym,66.71
+yolov8s-worldv2,500,description,stop sign,a red octagonal stop sign,near,43.95
+yolov8s-worldv2,500,description,parking meter,a coin-operated parking meter on a pole,weak,0.32
+yolov8s-worldv2,500,description,bench,a wooden park bench,weak,36.74
+yolov8s-worldv2,500,description,bird,a small bird with feathers and a beak,near,16.47
+yolov8s-worldv2,500,description,cat,a domestic cat with whiskers,synonym,58.11
+yolov8s-worldv2,500,description,dog,a pet dog with four legs,near,45.43
+yolov8s-worldv2,500,description,horse,a brown horse with a mane,synonym,63.14
+yolov8s-worldv2,500,description,sheep,a woolly white sheep,near,56.71
+yolov8s-worldv2,500,description,cow,a cow grazing in a field,synonym,39.75
+yolov8s-worldv2,500,description,elephant,a grey elephant with a trunk and tusks,synonym,64.12
+yolov8s-worldv2,500,description,bear,a large furry brown bear,synonym,65.95
+yolov8s-worldv2,500,description,zebra,a zebra with black and white stripes,scientific,55.32
+yolov8s-worldv2,500,description,giraffe,a tall giraffe with a long neck and spots,synonym,59.58
+yolov8s-worldv2,500,description,backpack,a backpack worn on the shoulders,synonym,7.75
+yolov8s-worldv2,500,description,umbrella,an open umbrella for rain,synonym,27.21
+yolov8s-worldv2,500,description,handbag,a leather handbag carried by hand,synonym,13.35
+yolov8s-worldv2,500,description,tie,a necktie worn with a shirt collar,expansion,24.8
+yolov8s-worldv2,500,description,suitcase,a rolling suitcase for travel,near,35.17
+yolov8s-worldv2,500,description,frisbee,a plastic frisbee disc thrown in the air,synonym,43.03
+yolov8s-worldv2,500,description,skis,a pair of long skis on snow,weak,10.62
+yolov8s-worldv2,500,description,snowboard,a snowboard for riding down snowy slopes,weak,31.59
+yolov8s-worldv2,500,description,sports ball,a round sports ball such as a soccer ball or tennis ball,near,22.46
+yolov8s-worldv2,500,description,kite,a colorful kite flying in the sky,weak,26.08
+yolov8s-worldv2,500,description,baseball bat,a wooden baseball bat,weak,11.14
+yolov8s-worldv2,500,description,baseball glove,a leather baseball glove,synonym,49.46
+yolov8s-worldv2,500,description,skateboard,a skateboard with four small wheels,synonym,45.64
+yolov8s-worldv2,500,description,surfboard,a long surfboard for riding waves,weak,38.77
+yolov8s-worldv2,500,description,tennis racket,a tennis racket with strings,spelling,33.17
+yolov8s-worldv2,500,description,bottle,a glass or plastic bottle,near,18.63
+yolov8s-worldv2,500,description,wine glass,a stemmed wine glass,near,13.78
+yolov8s-worldv2,500,description,cup,a cup for coffee or tea,near,39.56
+yolov8s-worldv2,500,description,fork,a metal fork for eating,weak,19.66
+yolov8s-worldv2,500,description,knife,a kitchen knife with a sharp blade,near,0.06
+yolov8s-worldv2,500,description,spoon,a metal spoon for eating,weak,4.74
+yolov8s-worldv2,500,description,bowl,a round bowl for food,near,31.78
+yolov8s-worldv2,500,description,banana,a yellow banana,near,7.82
+yolov8s-worldv2,500,description,apple,a red or green apple,weak,26.33
+yolov8s-worldv2,500,description,sandwich,a sandwich with bread and filling,near,27.68
+yolov8s-worldv2,500,description,orange,an orange citrus fruit,weak,11.36
+yolov8s-worldv2,500,description,broccoli,green broccoli florets,synonym,12.18
+yolov8s-worldv2,500,description,carrot,an orange carrot,scientific,3.57
+yolov8s-worldv2,500,description,hot dog,a hot dog sausage in a bun,synonym,41.02
+yolov8s-worldv2,500,description,pizza,a round pizza with cheese and toppings,weak,38.96
+yolov8s-worldv2,500,description,donut,a round glazed donut,near,8.85
+yolov8s-worldv2,500,description,cake,a frosted cake,synonym,29.67
+yolov8s-worldv2,500,description,chair,a chair with four legs and a backrest,near,23.61
+yolov8s-worldv2,500,description,couch,a couch with cushions in a living room,synonym,44.69
+yolov8s-worldv2,500,description,potted plant,a green potted plant in a pot,synonym,18.68
+yolov8s-worldv2,500,description,bed,a bed with pillows and blankets,near,36.11
+yolov8s-worldv2,500,description,dining table,a dining table set for a meal,synonym,27.99
+yolov8s-worldv2,500,description,toilet,a white porcelain toilet,synonym,68.46
+yolov8s-worldv2,500,description,tv,a flat-screen tv,expansion,57.27
+yolov8s-worldv2,500,description,laptop,an open laptop computer,synonym,42.89
+yolov8s-worldv2,500,description,mouse,a computer mouse on a desk,expansion,40.12
+yolov8s-worldv2,500,description,remote,a tv remote with buttons,expansion,6.6
+yolov8s-worldv2,500,description,keyboard,a computer keyboard with keys,near,37.86
+yolov8s-worldv2,500,description,cell phone,a smartphone cell phone,synonym,21.11
+yolov8s-worldv2,500,description,microwave,a kitchen microwave with a door,expansion,51.49
+yolov8s-worldv2,500,description,oven,a kitchen oven,synonym,16.34
+yolov8s-worldv2,500,description,toaster,a kitchen toaster with bread slots,weak,54.75
+yolov8s-worldv2,500,description,sink,a kitchen or bathroom sink with a faucet,synonym,14.79
+yolov8s-worldv2,500,description,refrigerator,a tall kitchen refrigerator,synonym,55.18
+yolov8s-worldv2,500,description,book,a book with pages and a cover,near,4.38
+yolov8s-worldv2,500,description,clock,a round wall clock with hands,synonym,25.67
+yolov8s-worldv2,500,description,vase,a decorative vase for flowers,near,21.31
+yolov8s-worldv2,500,description,scissors,a pair of scissors with two blades,synonym,
+yolov8s-worldv2,500,description,teddy bear,a soft plush teddy bear toy,synonym,36.51
+yolov8s-worldv2,500,description,hair drier,a handheld hair drier,synonym,
+yolov8s-worldv2,500,description,toothbrush,a toothbrush with bristles,weak,10.91
+yolov8s-worldv2,500,template,person,a photo of a person,synonym,44.28
+yolov8s-worldv2,500,template,bicycle,a photo of a bicycle,synonym,30.21
+yolov8s-worldv2,500,template,car,a photo of a car,synonym,37.8
+yolov8s-worldv2,500,template,motorcycle,a photo of a motorcycle,synonym,28.6
+yolov8s-worldv2,500,template,airplane,a photo of a airplane,synonym,70.53
+yolov8s-worldv2,500,template,bus,a photo of a bus,synonym,43.79
+yolov8s-worldv2,500,template,train,a photo of a train,near,65.86
+yolov8s-worldv2,500,template,truck,a photo of a truck,synonym,22.99
+yolov8s-worldv2,500,template,boat,a photo of a boat,near,27.22
+yolov8s-worldv2,500,template,traffic light,a photo of a traffic light,synonym,10.8
+yolov8s-worldv2,500,template,fire hydrant,a photo of a fire hydrant,synonym,72.35
+yolov8s-worldv2,500,template,stop sign,a photo of a stop sign,near,40.01
+yolov8s-worldv2,500,template,parking meter,a photo of a parking meter,weak,2.32
+yolov8s-worldv2,500,template,bench,a photo of a bench,weak,40.45
+yolov8s-worldv2,500,template,bird,a photo of a bird,near,22.72
+yolov8s-worldv2,500,template,cat,a photo of a cat,synonym,61.34
+yolov8s-worldv2,500,template,dog,a photo of a dog,near,37.31
+yolov8s-worldv2,500,template,horse,a photo of a horse,synonym,65.1
+yolov8s-worldv2,500,template,sheep,a photo of a sheep,near,56.45
+yolov8s-worldv2,500,template,cow,a photo of a cow,synonym,48.53
+yolov8s-worldv2,500,template,elephant,a photo of a elephant,synonym,64.5
+yolov8s-worldv2,500,template,bear,a photo of a bear,synonym,84.06
+yolov8s-worldv2,500,template,zebra,a photo of a zebra,scientific,51.42
+yolov8s-worldv2,500,template,giraffe,a photo of a giraffe,synonym,63.91
+yolov8s-worldv2,500,template,backpack,a photo of a backpack,synonym,6.92
+yolov8s-worldv2,500,template,umbrella,a photo of a umbrella,synonym,18.54
+yolov8s-worldv2,500,template,handbag,a photo of a handbag,synonym,9.28
+yolov8s-worldv2,500,template,tie,a photo of a tie,expansion,24.91
+yolov8s-worldv2,500,template,suitcase,a photo of a suitcase,near,28.27
+yolov8s-worldv2,500,template,frisbee,a photo of a frisbee,synonym,31.54
+yolov8s-worldv2,500,template,skis,a photo of a skis,weak,11.07
+yolov8s-worldv2,500,template,snowboard,a photo of a snowboard,weak,11.4
+yolov8s-worldv2,500,template,sports ball,a photo of a sports ball,near,31.07
+yolov8s-worldv2,500,template,kite,a photo of a kite,weak,28.31
+yolov8s-worldv2,500,template,baseball bat,a photo of a baseball bat,weak,15.08
+yolov8s-worldv2,500,template,baseball glove,a photo of a baseball glove,synonym,47.82
+yolov8s-worldv2,500,template,skateboard,a photo of a skateboard,synonym,55.95
+yolov8s-worldv2,500,template,surfboard,a photo of a surfboard,weak,47.96
+yolov8s-worldv2,500,template,tennis racket,a photo of a tennis racket,spelling,40.85
+yolov8s-worldv2,500,template,bottle,a photo of a bottle,near,17.12
+yolov8s-worldv2,500,template,wine glass,a photo of a wine glass,near,17.82
+yolov8s-worldv2,500,template,cup,a photo of a cup,near,38.34
+yolov8s-worldv2,500,template,fork,a photo of a fork,weak,27.26
+yolov8s-worldv2,500,template,knife,a photo of a knife,near,0.69
+yolov8s-worldv2,500,template,spoon,a photo of a spoon,weak,3.73
+yolov8s-worldv2,500,template,bowl,a photo of a bowl,near,39.3
+yolov8s-worldv2,500,template,banana,a photo of a banana,near,10.22
+yolov8s-worldv2,500,template,apple,a photo of a apple,weak,23.73
+yolov8s-worldv2,500,template,sandwich,a photo of a sandwich,near,31.12
+yolov8s-worldv2,500,template,orange,a photo of a orange,weak,7.45
+yolov8s-worldv2,500,template,broccoli,a photo of a broccoli,synonym,15.14
+yolov8s-worldv2,500,template,carrot,a photo of a carrot,scientific,1.46
+yolov8s-worldv2,500,template,hot dog,a photo of a hot dog,synonym,29.35
+yolov8s-worldv2,500,template,pizza,a photo of a pizza,weak,42.1
+yolov8s-worldv2,500,template,donut,a photo of a donut,near,15.17
+yolov8s-worldv2,500,template,cake,a photo of a cake,synonym,30.72
+yolov8s-worldv2,500,template,chair,a photo of a chair,near,23.26
+yolov8s-worldv2,500,template,couch,a photo of a couch,synonym,44.71
+yolov8s-worldv2,500,template,potted plant,a photo of a potted plant,synonym,18.51
+yolov8s-worldv2,500,template,bed,a photo of a bed,near,39.06
+yolov8s-worldv2,500,template,dining table,a photo of a dining table,synonym,31.88
+yolov8s-worldv2,500,template,toilet,a photo of a toilet,synonym,56.02
+yolov8s-worldv2,500,template,tv,a photo of a tv,expansion,52.95
+yolov8s-worldv2,500,template,laptop,a photo of a laptop,synonym,43.86
+yolov8s-worldv2,500,template,mouse,a photo of a mouse,expansion,38.82
+yolov8s-worldv2,500,template,remote,a photo of a remote,expansion,8.64
+yolov8s-worldv2,500,template,keyboard,a photo of a keyboard,near,33.85
+yolov8s-worldv2,500,template,cell phone,a photo of a cell phone,synonym,26.12
+yolov8s-worldv2,500,template,microwave,a photo of a microwave,expansion,56.69
+yolov8s-worldv2,500,template,oven,a photo of a oven,synonym,8.21
+yolov8s-worldv2,500,template,toaster,a photo of a toaster,weak,56.44
+yolov8s-worldv2,500,template,sink,a photo of a sink,synonym,22.96
+yolov8s-worldv2,500,template,refrigerator,a photo of a refrigerator,synonym,54.9
+yolov8s-worldv2,500,template,book,a photo of a book,near,4.7
+yolov8s-worldv2,500,template,clock,a photo of a clock,synonym,20.26
+yolov8s-worldv2,500,template,vase,a photo of a vase,near,19.35
+yolov8s-worldv2,500,template,scissors,a photo of a scissors,synonym,
+yolov8s-worldv2,500,template,teddy bear,a photo of a teddy bear,synonym,47.48
+yolov8s-worldv2,500,template,hair drier,a photo of a hair drier,synonym,
+yolov8s-worldv2,500,template,toothbrush,a photo of a toothbrush,weak,20.27
+yolov8l-worldv2,500,name,person,person,synonym,61.49
+yolov8l-worldv2,500,name,bicycle,bicycle,synonym,48.82
+yolov8l-worldv2,500,name,car,car,synonym,53.68
+yolov8l-worldv2,500,name,motorcycle,motorcycle,synonym,33.28
+yolov8l-worldv2,500,name,airplane,airplane,synonym,81.0
+yolov8l-worldv2,500,name,bus,bus,synonym,61.72
+yolov8l-worldv2,500,name,train,train,near,74.93
+yolov8l-worldv2,500,name,truck,truck,synonym,29.29
+yolov8l-worldv2,500,name,boat,boat,near,39.96
+yolov8l-worldv2,500,name,traffic light,traffic light,synonym,20.41
+yolov8l-worldv2,500,name,fire hydrant,fire hydrant,synonym,77.23
+yolov8l-worldv2,500,name,stop sign,stop sign,near,52.84
+yolov8l-worldv2,500,name,parking meter,parking meter,weak,50.4
+yolov8l-worldv2,500,name,bench,bench,weak,51.6
+yolov8l-worldv2,500,name,bird,bird,near,34.7
+yolov8l-worldv2,500,name,cat,cat,synonym,87.18
+yolov8l-worldv2,500,name,dog,dog,near,68.55
+yolov8l-worldv2,500,name,horse,horse,synonym,74.43
+yolov8l-worldv2,500,name,sheep,sheep,near,69.06
+yolov8l-worldv2,500,name,cow,cow,synonym,59.93
+yolov8l-worldv2,500,name,elephant,elephant,synonym,79.15
+yolov8l-worldv2,500,name,bear,bear,synonym,92.71
+yolov8l-worldv2,500,name,zebra,zebra,scientific,62.92
+yolov8l-worldv2,500,name,giraffe,giraffe,synonym,74.16
+yolov8l-worldv2,500,name,backpack,backpack,synonym,13.05
+yolov8l-worldv2,500,name,umbrella,umbrella,synonym,33.55
+yolov8l-worldv2,500,name,handbag,handbag,synonym,13.45
+yolov8l-worldv2,500,name,tie,tie,expansion,45.44
+yolov8l-worldv2,500,name,suitcase,suitcase,near,36.18
+yolov8l-worldv2,500,name,frisbee,frisbee,synonym,67.43
+yolov8l-worldv2,500,name,skis,skis,weak,19.79
+yolov8l-worldv2,500,name,snowboard,snowboard,weak,55.45
+yolov8l-worldv2,500,name,sports ball,sports ball,near,38.02
+yolov8l-worldv2,500,name,kite,kite,weak,40.14
+yolov8l-worldv2,500,name,baseball bat,baseball bat,weak,17.67
+yolov8l-worldv2,500,name,baseball glove,baseball glove,synonym,50.35
+yolov8l-worldv2,500,name,skateboard,skateboard,synonym,64.67
+yolov8l-worldv2,500,name,surfboard,surfboard,weak,65.79
+yolov8l-worldv2,500,name,tennis racket,tennis racket,spelling,53.92
+yolov8l-worldv2,500,name,bottle,bottle,near,31.15
+yolov8l-worldv2,500,name,wine glass,wine glass,near,27.52
+yolov8l-worldv2,500,name,cup,cup,near,55.68
+yolov8l-worldv2,500,name,fork,fork,weak,39.21
+yolov8l-worldv2,500,name,knife,knife,near,18.12
+yolov8l-worldv2,500,name,spoon,spoon,weak,9.19
+yolov8l-worldv2,500,name,bowl,bowl,near,54.97
+yolov8l-worldv2,500,name,banana,banana,near,13.66
+yolov8l-worldv2,500,name,apple,apple,weak,36.88
+yolov8l-worldv2,500,name,sandwich,sandwich,near,43.69
+yolov8l-worldv2,500,name,orange,orange,weak,6.77
+yolov8l-worldv2,500,name,broccoli,broccoli,synonym,21.27
+yolov8l-worldv2,500,name,carrot,carrot,scientific,9.67
+yolov8l-worldv2,500,name,hot dog,hot dog,synonym,27.65
+yolov8l-worldv2,500,name,pizza,pizza,weak,53.75
+yolov8l-worldv2,500,name,donut,donut,near,49.09
+yolov8l-worldv2,500,name,cake,cake,synonym,49.84
+yolov8l-worldv2,500,name,chair,chair,near,34.99
+yolov8l-worldv2,500,name,couch,couch,synonym,59.31
+yolov8l-worldv2,500,name,potted plant,potted plant,synonym,23.73
+yolov8l-worldv2,500,name,bed,bed,near,56.8
+yolov8l-worldv2,500,name,dining table,dining table,synonym,32.61
+yolov8l-worldv2,500,name,toilet,toilet,synonym,64.52
+yolov8l-worldv2,500,name,tv,tv,expansion,61.42
+yolov8l-worldv2,500,name,laptop,laptop,synonym,51.98
+yolov8l-worldv2,500,name,mouse,mouse,expansion,52.92
+yolov8l-worldv2,500,name,remote,remote,expansion,31.42
+yolov8l-worldv2,500,name,keyboard,keyboard,near,42.56
+yolov8l-worldv2,500,name,cell phone,cell phone,synonym,48.31
+yolov8l-worldv2,500,name,microwave,microwave,expansion,63.31
+yolov8l-worldv2,500,name,oven,oven,synonym,18.51
+yolov8l-worldv2,500,name,toaster,toaster,weak,59.8
+yolov8l-worldv2,500,name,sink,sink,synonym,38.1
+yolov8l-worldv2,500,name,refrigerator,refrigerator,synonym,71.98
+yolov8l-worldv2,500,name,book,book,near,13.13
+yolov8l-worldv2,500,name,clock,clock,synonym,58.35
+yolov8l-worldv2,500,name,vase,vase,near,39.61
+yolov8l-worldv2,500,name,scissors,scissors,synonym,
+yolov8l-worldv2,500,name,teddy bear,teddy bear,synonym,66.37
+yolov8l-worldv2,500,name,hair drier,hair drier,synonym,
+yolov8l-worldv2,500,name,toothbrush,toothbrush,weak,48.89
+yolov8l-worldv2,500,synonym,person,human,synonym,51.7
+yolov8l-worldv2,500,synonym,bicycle,bike,synonym,44.57
+yolov8l-worldv2,500,synonym,car,automobile,synonym,44.94
+yolov8l-worldv2,500,synonym,motorcycle,motorbike,synonym,32.61
+yolov8l-worldv2,500,synonym,airplane,aeroplane,synonym,82.17
+yolov8l-worldv2,500,synonym,bus,omnibus,synonym,34.92
+yolov8l-worldv2,500,synonym,train,locomotive,near,65.94
+yolov8l-worldv2,500,synonym,truck,lorry,synonym,22.21
+yolov8l-worldv2,500,synonym,boat,ship,near,32.36
+yolov8l-worldv2,500,synonym,traffic light,traffic signal,synonym,17.22
+yolov8l-worldv2,500,synonym,fire hydrant,fireplug,synonym,73.55
+yolov8l-worldv2,500,synonym,stop sign,halt sign,near,17.38
+yolov8l-worldv2,500,synonym,parking meter,parking timer,weak,0.0
+yolov8l-worldv2,500,synonym,bench,long seat,weak,30.36
+yolov8l-worldv2,500,synonym,bird,fowl,near,28.6
+yolov8l-worldv2,500,synonym,cat,kitty,synonym,88.58
+yolov8l-worldv2,500,synonym,dog,hound,near,63.05
+yolov8l-worldv2,500,synonym,horse,steed,synonym,30.47
+yolov8l-worldv2,500,synonym,sheep,lamb,near,44.79
+yolov8l-worldv2,500,synonym,cow,cattle,synonym,48.68
+yolov8l-worldv2,500,synonym,elephant,pachyderm,synonym,66.61
+yolov8l-worldv2,500,synonym,bear,bruin,synonym,92.03
+yolov8l-worldv2,500,synonym,zebra,Equus quagga,scientific,25.43
+yolov8l-worldv2,500,synonym,giraffe,camelopard,synonym,7.4
+yolov8l-worldv2,500,synonym,backpack,rucksack,synonym,16.3
+yolov8l-worldv2,500,synonym,umbrella,brolly,synonym,32.35
+yolov8l-worldv2,500,synonym,handbag,purse,synonym,15.02
+yolov8l-worldv2,500,synonym,tie,necktie,expansion,38.02
+yolov8l-worldv2,500,synonym,suitcase,luggage,near,47.13
+yolov8l-worldv2,500,synonym,frisbee,flying disc,synonym,46.36
+yolov8l-worldv2,500,synonym,skis,snow runners,weak,0.22
+yolov8l-worldv2,500,synonym,snowboard,snow deck,weak,0.0
+yolov8l-worldv2,500,synonym,sports ball,ball,near,40.23
+yolov8l-worldv2,500,synonym,kite,windborne toy,weak,11.37
+yolov8l-worldv2,500,synonym,baseball bat,club,weak,0.0
+yolov8l-worldv2,500,synonym,baseball glove,mitt,synonym,4.12
+yolov8l-worldv2,500,synonym,skateboard,skate deck,synonym,70.54
+yolov8l-worldv2,500,synonym,surfboard,wave board,weak,55.08
+yolov8l-worldv2,500,synonym,tennis racket,racquet,spelling,54.05
+yolov8l-worldv2,500,synonym,bottle,flask,near,5.36
+yolov8l-worldv2,500,synonym,wine glass,goblet,near,23.3
+yolov8l-worldv2,500,synonym,cup,mug,near,41.05
+yolov8l-worldv2,500,synonym,fork,tined utensil,weak,24.04
+yolov8l-worldv2,500,synonym,knife,blade,near,0.0
+yolov8l-worldv2,500,synonym,spoon,scoop,weak,0.74
+yolov8l-worldv2,500,synonym,bowl,basin,near,3.72
+yolov8l-worldv2,500,synonym,banana,plantain,near,5.18
+yolov8l-worldv2,500,synonym,apple,pome,weak,0.0
+yolov8l-worldv2,500,synonym,sandwich,hoagie,near,22.25
+yolov8l-worldv2,500,synonym,orange,citrus fruit,weak,7.28
+yolov8l-worldv2,500,synonym,broccoli,calabrese,synonym,0.0
+yolov8l-worldv2,500,synonym,carrot,Daucus carota,scientific,1.0
+yolov8l-worldv2,500,synonym,hot dog,frankfurter,synonym,8.63
+yolov8l-worldv2,500,synonym,pizza,pie,weak,49.5
+yolov8l-worldv2,500,synonym,donut,cruller,near,34.86
+yolov8l-worldv2,500,synonym,cake,gateau,synonym,38.86
+yolov8l-worldv2,500,synonym,chair,seat,near,2.0
+yolov8l-worldv2,500,synonym,couch,sofa,synonym,52.44
+yolov8l-worldv2,500,synonym,potted plant,houseplant,synonym,16.19
+yolov8l-worldv2,500,synonym,bed,cot,near,44.25
+yolov8l-worldv2,500,synonym,dining table,dinner table,synonym,35.2
+yolov8l-worldv2,500,synonym,toilet,lavatory,synonym,30.74
+yolov8l-worldv2,500,synonym,tv,television,expansion,57.92
+yolov8l-worldv2,500,synonym,laptop,notebook computer,synonym,56.3
+yolov8l-worldv2,500,synonym,mouse,computer mouse,expansion,54.74
+yolov8l-worldv2,500,synonym,remote,remote control,expansion,28.92
+yolov8l-worldv2,500,synonym,keyboard,keypad,near,22.35
+yolov8l-worldv2,500,synonym,cell phone,mobile phone,synonym,41.21
+yolov8l-worldv2,500,synonym,microwave,microwave oven,expansion,67.94
+yolov8l-worldv2,500,synonym,oven,cooker,synonym,18.19
+yolov8l-worldv2,500,synonym,toaster,toast maker,weak,3.79
+yolov8l-worldv2,500,synonym,sink,washbasin,synonym,21.57
+yolov8l-worldv2,500,synonym,refrigerator,fridge,synonym,70.4
+yolov8l-worldv2,500,synonym,book,tome,near,1.04
+yolov8l-worldv2,500,synonym,clock,timepiece,synonym,54.21
+yolov8l-worldv2,500,synonym,vase,urn,near,6.1
+yolov8l-worldv2,500,synonym,scissors,shears,synonym,
+yolov8l-worldv2,500,synonym,teddy bear,teddy,synonym,56.24
+yolov8l-worldv2,500,synonym,hair drier,blow dryer,synonym,
+yolov8l-worldv2,500,synonym,toothbrush,dental brush,weak,44.93
+yolov8l-worldv2,500,description,person,a person standing or walking,synonym,54.2
+yolov8l-worldv2,500,description,bicycle,a two-wheeled pedal bicycle,synonym,40.08
+yolov8l-worldv2,500,description,car,a passenger car on the road,synonym,40.54
+yolov8l-worldv2,500,description,motorcycle,a motorcycle with two wheels and an engine,synonym,35.36
+yolov8l-worldv2,500,description,airplane,a large passenger airplane with wings,synonym,81.19
+yolov8l-worldv2,500,description,bus,a large public transit bus,synonym,58.82
+yolov8l-worldv2,500,description,train,a long passenger train on railway tracks,near,75.22
+yolov8l-worldv2,500,description,truck,a large cargo truck,synonym,22.78
+yolov8l-worldv2,500,description,boat,a small boat floating on water,near,33.43
+yolov8l-worldv2,500,description,traffic light,"a traffic light with red, yellow and green lamps",synonym,17.56
+yolov8l-worldv2,500,description,fire hydrant,a red fire hydrant on the sidewalk,synonym,74.18
+yolov8l-worldv2,500,description,stop sign,a red octagonal stop sign,near,49.53
+yolov8l-worldv2,500,description,parking meter,a coin-operated parking meter on a pole,weak,8.62
+yolov8l-worldv2,500,description,bench,a wooden park bench,weak,48.65
+yolov8l-worldv2,500,description,bird,a small bird with feathers and a beak,near,23.12
+yolov8l-worldv2,500,description,cat,a domestic cat with whiskers,synonym,83.81
+yolov8l-worldv2,500,description,dog,a pet dog with four legs,near,67.04
+yolov8l-worldv2,500,description,horse,a brown horse with a mane,synonym,71.56
+yolov8l-worldv2,500,description,sheep,a woolly white sheep,near,66.42
+yolov8l-worldv2,500,description,cow,a cow grazing in a field,synonym,56.54
+yolov8l-worldv2,500,description,elephant,a grey elephant with a trunk and tusks,synonym,80.92
+yolov8l-worldv2,500,description,bear,a large furry brown bear,synonym,90.69
+yolov8l-worldv2,500,description,zebra,a zebra with black and white stripes,scientific,59.57
+yolov8l-worldv2,500,description,giraffe,a tall giraffe with a long neck and spots,synonym,70.77
+yolov8l-worldv2,500,description,backpack,a backpack worn on the shoulders,synonym,10.65
+yolov8l-worldv2,500,description,umbrella,an open umbrella for rain,synonym,24.09
+yolov8l-worldv2,500,description,handbag,a leather handbag carried by hand,synonym,17.96
+yolov8l-worldv2,500,description,tie,a necktie worn with a shirt collar,expansion,39.78
+yolov8l-worldv2,500,description,suitcase,a rolling suitcase for travel,near,36.12
+yolov8l-worldv2,500,description,frisbee,a plastic frisbee disc thrown in the air,synonym,69.78
+yolov8l-worldv2,500,description,skis,a pair of long skis on snow,weak,14.34
+yolov8l-worldv2,500,description,snowboard,a snowboard for riding down snowy slopes,weak,40.43
+yolov8l-worldv2,500,description,sports ball,a round sports ball such as a soccer ball or tennis ball,near,42.2
+yolov8l-worldv2,500,description,kite,a colorful kite flying in the sky,weak,38.66
+yolov8l-worldv2,500,description,baseball bat,a wooden baseball bat,weak,14.34
+yolov8l-worldv2,500,description,baseball glove,a leather baseball glove,synonym,44.61
+yolov8l-worldv2,500,description,skateboard,a skateboard with four small wheels,synonym,62.15
+yolov8l-worldv2,500,description,surfboard,a long surfboard for riding waves,weak,63.12
+yolov8l-worldv2,500,description,tennis racket,a tennis racket with strings,spelling,50.22
+yolov8l-worldv2,500,description,bottle,a glass or plastic bottle,near,26.23
+yolov8l-worldv2,500,description,wine glass,a stemmed wine glass,near,28.45
+yolov8l-worldv2,500,description,cup,a cup for coffee or tea,near,55.1
+yolov8l-worldv2,500,description,fork,a metal fork for eating,weak,33.7
+yolov8l-worldv2,500,description,knife,a kitchen knife with a sharp blade,near,7.03
+yolov8l-worldv2,500,description,spoon,a metal spoon for eating,weak,10.53
+yolov8l-worldv2,500,description,bowl,a round bowl for food,near,41.44
+yolov8l-worldv2,500,description,banana,a yellow banana,near,12.04
+yolov8l-worldv2,500,description,apple,a red or green apple,weak,31.83
+yolov8l-worldv2,500,description,sandwich,a sandwich with bread and filling,near,49.95
+yolov8l-worldv2,500,description,orange,an orange citrus fruit,weak,17.22
+yolov8l-worldv2,500,description,broccoli,green broccoli florets,synonym,12.6
+yolov8l-worldv2,500,description,carrot,an orange carrot,scientific,9.76
+yolov8l-worldv2,500,description,hot dog,a hot dog sausage in a bun,synonym,43.93
+yolov8l-worldv2,500,description,pizza,a round pizza with cheese and toppings,weak,45.27
+yolov8l-worldv2,500,description,donut,a round glazed donut,near,30.19
+yolov8l-worldv2,500,description,cake,a frosted cake,synonym,36.37
+yolov8l-worldv2,500,description,chair,a chair with four legs and a backrest,near,30.68
+yolov8l-worldv2,500,description,couch,a couch with cushions in a living room,synonym,57.71
+yolov8l-worldv2,500,description,potted plant,a green potted plant in a pot,synonym,18.23
+yolov8l-worldv2,500,description,bed,a bed with pillows and blankets,near,39.88
+yolov8l-worldv2,500,description,dining table,a dining table set for a meal,synonym,35.47
+yolov8l-worldv2,500,description,toilet,a white porcelain toilet,synonym,64.27
+yolov8l-worldv2,500,description,tv,a flat-screen tv,expansion,57.74
+yolov8l-worldv2,500,description,laptop,an open laptop computer,synonym,51.59
+yolov8l-worldv2,500,description,mouse,a computer mouse on a desk,expansion,50.36
+yolov8l-worldv2,500,description,remote,a tv remote with buttons,expansion,21.04
+yolov8l-worldv2,500,description,keyboard,a computer keyboard with keys,near,49.07
+yolov8l-worldv2,500,description,cell phone,a smartphone cell phone,synonym,44.32
+yolov8l-worldv2,500,description,microwave,a kitchen microwave with a door,expansion,62.39
+yolov8l-worldv2,500,description,oven,a kitchen oven,synonym,26.53
+yolov8l-worldv2,500,description,toaster,a kitchen toaster with bread slots,weak,56.44
+yolov8l-worldv2,500,description,sink,a kitchen or bathroom sink with a faucet,synonym,34.48
+yolov8l-worldv2,500,description,refrigerator,a tall kitchen refrigerator,synonym,67.62
+yolov8l-worldv2,500,description,book,a book with pages and a cover,near,10.54
+yolov8l-worldv2,500,description,clock,a round wall clock with hands,synonym,49.21
+yolov8l-worldv2,500,description,vase,a decorative vase for flowers,near,36.5
+yolov8l-worldv2,500,description,scissors,a pair of scissors with two blades,synonym,
+yolov8l-worldv2,500,description,teddy bear,a soft plush teddy bear toy,synonym,62.08
+yolov8l-worldv2,500,description,hair drier,a handheld hair drier,synonym,
+yolov8l-worldv2,500,description,toothbrush,a toothbrush with bristles,weak,46.59
+yolov8l-worldv2,500,template,person,a photo of a person,synonym,51.55
+yolov8l-worldv2,500,template,bicycle,a photo of a bicycle,synonym,45.9
+yolov8l-worldv2,500,template,car,a photo of a car,synonym,52.59
+yolov8l-worldv2,500,template,motorcycle,a photo of a motorcycle,synonym,34.86
+yolov8l-worldv2,500,template,airplane,a photo of a airplane,synonym,85.03
+yolov8l-worldv2,500,template,bus,a photo of a bus,synonym,59.3
+yolov8l-worldv2,500,template,train,a photo of a train,near,75.32
+yolov8l-worldv2,500,template,truck,a photo of a truck,synonym,30.69
+yolov8l-worldv2,500,template,boat,a photo of a boat,near,36.17
+yolov8l-worldv2,500,template,traffic light,a photo of a traffic light,synonym,19.26
+yolov8l-worldv2,500,template,fire hydrant,a photo of a fire hydrant,synonym,75.64
+yolov8l-worldv2,500,template,stop sign,a photo of a stop sign,near,40.09
+yolov8l-worldv2,500,template,parking meter,a photo of a parking meter,weak,38.78
+yolov8l-worldv2,500,template,bench,a photo of a bench,weak,48.14
+yolov8l-worldv2,500,template,bird,a photo of a bird,near,26.74
+yolov8l-worldv2,500,template,cat,a photo of a cat,synonym,87.3
+yolov8l-worldv2,500,template,dog,a photo of a dog,near,61.43
+yolov8l-worldv2,500,template,horse,a photo of a horse,synonym,79.76
+yolov8l-worldv2,500,template,sheep,a photo of a sheep,near,45.77
+yolov8l-worldv2,500,template,cow,a photo of a cow,synonym,54.18
+yolov8l-worldv2,500,template,elephant,a photo of a elephant,synonym,77.48
+yolov8l-worldv2,500,template,bear,a photo of a bear,synonym,91.04
+yolov8l-worldv2,500,template,zebra,a photo of a zebra,scientific,58.94
+yolov8l-worldv2,500,template,giraffe,a photo of a giraffe,synonym,73.94
+yolov8l-worldv2,500,template,backpack,a photo of a backpack,synonym,11.99
+yolov8l-worldv2,500,template,umbrella,a photo of a umbrella,synonym,24.08
+yolov8l-worldv2,500,template,handbag,a photo of a handbag,synonym,13.17
+yolov8l-worldv2,500,template,tie,a photo of a tie,expansion,40.21
+yolov8l-worldv2,500,template,suitcase,a photo of a suitcase,near,35.49
+yolov8l-worldv2,500,template,frisbee,a photo of a frisbee,synonym,65.71
+yolov8l-worldv2,500,template,skis,a photo of a skis,weak,17.37
+yolov8l-worldv2,500,template,snowboard,a photo of a snowboard,weak,50.87
+yolov8l-worldv2,500,template,sports ball,a photo of a sports ball,near,41.08
+yolov8l-worldv2,500,template,kite,a photo of a kite,weak,33.58
+yolov8l-worldv2,500,template,baseball bat,a photo of a baseball bat,weak,27.11
+yolov8l-worldv2,500,template,baseball glove,a photo of a baseball glove,synonym,44.75
+yolov8l-worldv2,500,template,skateboard,a photo of a skateboard,synonym,61.05
+yolov8l-worldv2,500,template,surfboard,a photo of a surfboard,weak,67.29
+yolov8l-worldv2,500,template,tennis racket,a photo of a tennis racket,spelling,49.85
+yolov8l-worldv2,500,template,bottle,a photo of a bottle,near,26.71
+yolov8l-worldv2,500,template,wine glass,a photo of a wine glass,near,28.44
+yolov8l-worldv2,500,template,cup,a photo of a cup,near,49.93
+yolov8l-worldv2,500,template,fork,a photo of a fork,weak,35.5
+yolov8l-worldv2,500,template,knife,a photo of a knife,near,14.52
+yolov8l-worldv2,500,template,spoon,a photo of a spoon,weak,7.53
+yolov8l-worldv2,500,template,bowl,a photo of a bowl,near,46.13
+yolov8l-worldv2,500,template,banana,a photo of a banana,near,13.69
+yolov8l-worldv2,500,template,apple,a photo of a apple,weak,35.21
+yolov8l-worldv2,500,template,sandwich,a photo of a sandwich,near,43.77
+yolov8l-worldv2,500,template,orange,a photo of a orange,weak,13.28
+yolov8l-worldv2,500,template,broccoli,a photo of a broccoli,synonym,18.41
+yolov8l-worldv2,500,template,carrot,a photo of a carrot,scientific,7.94
+yolov8l-worldv2,500,template,hot dog,a photo of a hot dog,synonym,31.9
+yolov8l-worldv2,500,template,pizza,a photo of a pizza,weak,45.81
+yolov8l-worldv2,500,template,donut,a photo of a donut,near,40.13
+yolov8l-worldv2,500,template,cake,a photo of a cake,synonym,45.26
+yolov8l-worldv2,500,template,chair,a photo of a chair,near,34.25
+yolov8l-worldv2,500,template,couch,a photo of a couch,synonym,58.97
+yolov8l-worldv2,500,template,potted plant,a photo of a potted plant,synonym,21.51
+yolov8l-worldv2,500,template,bed,a photo of a bed,near,45.78
+yolov8l-worldv2,500,template,dining table,a photo of a dining table,synonym,33.65
+yolov8l-worldv2,500,template,toilet,a photo of a toilet,synonym,62.95
+yolov8l-worldv2,500,template,tv,a photo of a tv,expansion,56.8
+yolov8l-worldv2,500,template,laptop,a photo of a laptop,synonym,53.58
+yolov8l-worldv2,500,template,mouse,a photo of a mouse,expansion,53.72
+yolov8l-worldv2,500,template,remote,a photo of a remote,expansion,30.63
+yolov8l-worldv2,500,template,keyboard,a photo of a keyboard,near,41.93
+yolov8l-worldv2,500,template,cell phone,a photo of a cell phone,synonym,42.09
+yolov8l-worldv2,500,template,microwave,a photo of a microwave,expansion,65.54
+yolov8l-worldv2,500,template,oven,a photo of a oven,synonym,16.61
+yolov8l-worldv2,500,template,toaster,a photo of a toaster,weak,41.68
+yolov8l-worldv2,500,template,sink,a photo of a sink,synonym,38.43
+yolov8l-worldv2,500,template,refrigerator,a photo of a refrigerator,synonym,68.16
+yolov8l-worldv2,500,template,book,a photo of a book,near,10.88
+yolov8l-worldv2,500,template,clock,a photo of a clock,synonym,42.44
+yolov8l-worldv2,500,template,vase,a photo of a vase,near,36.36
+yolov8l-worldv2,500,template,scissors,a photo of a scissors,synonym,
+yolov8l-worldv2,500,template,teddy bear,a photo of a teddy bear,synonym,59.02
+yolov8l-worldv2,500,template,hair drier,a photo of a hair drier,synonym,
+yolov8l-worldv2,500,template,toothbrush,a photo of a toothbrush,weak,47.17

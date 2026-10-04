@@ -1,0 +1,407 @@
+{
+ "n_images": 500,
+ "gpu": "NVIDIA A100 80GB PCIe",
+ "precision": "fp16",
+ "env": {
+  "python": "3.12.15",
+  "torch": "2.6.0+cu124",
+  "cuda": "12.4",
+  "cudnn": 90100,
+  "ultralytics": "8.4.166",
+  "transformers": "5.17.0",
+  "os": "Linux-4.18.0-553.150.1.el8_10.x86_64-x86_64-with-glibc2.28",
+  "gpu": "NVIDIA A100 80GB PCIe",
+  "power": "unknown",
+  "nvidia_driver": "580.178.04, 300.00 W, 1410 MHz"
+ },
+ "fastest": {
+  "model": "yolov8s",
+  "label": "YOLOv8-S (closed-set)",
+  "fps": 128.9,
+  "AP": 45.8
+ },
+ "most_accurate": {
+  "model": "yolov8l",
+  "label": "YOLOv8-L (closed-set)",
+  "AP": 54.7,
+  "fps": 108.6
+ },
+ "fastest_open_vocab": {
+  "model": "yoloe-v8s",
+  "label": "YOLOE-v8-S",
+  "fps": 118.9,
+  "AP": 35.2
+ },
+ "most_accurate_open_vocab": {
+  "model": "gdino-t",
+  "label": "Grounding DINO-T",
+  "AP": 51.0,
+  "fps": 9.6
+ },
+ "models": {
+  "yolov8s": {
+   "label": "YOLOv8-S (closed-set)",
+   "AP": 45.8,
+   "AP50": 63.6,
+   "fps": 128.9,
+   "ms": 7.76
+  },
+  "yolov8m": {
+   "label": "YOLOv8-M (closed-set)",
+   "AP": 51.1,
+   "AP50": 68.7,
+   "fps": 116.3,
+   "ms": 8.6
+  },
+  "yolov8l": {
+   "label": "YOLOv8-L (closed-set)",
+   "AP": 54.7,
+   "AP50": 71.8,
+   "fps": 108.6,
+   "ms": 9.2
+  },
+  "yolov8s-worldv2": {
+   "label": "YOLO-World-S v2",
+   "AP": 39.0,
+   "AP50": 54.2,
+   "fps": 106.1,
+   "ms": 9.42
+  },
+  "yolov8m-worldv2": {
+   "label": "YOLO-World-M v2",
+   "AP": 44.4,
+   "AP50": 60.6,
+   "fps": 95.0,
+   "ms": 10.53
+  },
+  "yolov8l-worldv2": {
+   "label": "YOLO-World-L v2",
+   "AP": 46.7,
+   "AP50": 62.7,
+   "fps": 86.8,
+   "ms": 11.52
+  },
+  "yoloe-v8s": {
+   "label": "YOLOE-v8-S",
+   "AP": 35.2,
+   "AP50": 51.0,
+   "fps": 118.9,
+   "ms": 8.41
+  },
+  "yoloe-11s": {
+   "label": "YOLOE-11-S",
+   "AP": 35.6,
+   "AP50": 51.0,
+   "fps": 96.2,
+   "ms": 10.4
+  },
+  "yoloe-26s": {
+   "label": "YOLOE-26-S",
+   "AP": 38.9,
+   "AP50": 54.8,
+   "fps": 90.0,
+   "ms": 11.11
+  },
+  "gdino-t": {
+   "label": "Grounding DINO-T",
+   "AP": 51.0,
+   "AP50": 66.8,
+   "fps": 9.6,
+   "ms": 104.07
+  },
+  "owlv2-b16": {
+   "label": "OWLv2-B/16",
+   "AP": 49.0,
+   "AP50": 69.1,
+   "fps": 60.4,
+   "ms": 16.56
+  }
+ },
+ "same_size_pairs": [
+  {
+   "size": "S",
+   "closed_AP": 45.8,
+   "world_AP": 39.0,
+   "AP_gap": -6.8,
+   "closed_fps": 128.9,
+   "world_fps": 106.1,
+   "world_speed_pct_of_closed": 82.0
+  },
+  {
+   "size": "M",
+   "closed_AP": 51.1,
+   "world_AP": 44.4,
+   "AP_gap": -6.8,
+   "closed_fps": 116.3,
+   "world_fps": 95.0,
+   "world_speed_pct_of_closed": 82.0
+  },
+  {
+   "size": "L",
+   "closed_AP": 54.7,
+   "world_AP": 46.7,
+   "AP_gap": -8.1,
+   "closed_fps": 108.6,
+   "world_fps": 86.8,
+   "world_speed_pct_of_closed": 80.0
+  }
+ ],
+ "sanity": [
+  {
+   "model": "yolov8s",
+   "pipeline": "compare.py predict() path (single-label NMS, max_det 100)",
+   "AP": 45.8
+  },
+  {
+   "model": "yolov8s-worldv2",
+   "pipeline": "compare.py predict() path (single-label NMS, max_det 100)",
+   "AP": 39.0
+  },
+  {
+   "model": "yolov8s",
+   "pipeline": "Ultralytics model.val() (multi-label NMS, max_det 300 -> top-100 per image)",
+   "AP": 46.4
+  },
+  {
+   "model": "yolov8s-worldv2",
+   "pipeline": "Ultralytics model.val() (multi-label NMS, max_det 300 -> top-100 per image)",
+   "AP": 40.0
+  }
+ ],
+ "wording": {
+  "yolov8s-worldv2": {
+   "AP": {
+    "name": 39.0,
+    "synonym": 25.6,
+    "description": 32.2,
+    "template": 33.1
+   },
+   "best": "name",
+   "worst": "synonym",
+   "gap": 13.4
+  },
+  "yolov8l-worldv2": {
+   "AP": {
+    "name": 46.7,
+    "synonym": 32.4,
+    "description": 42.9,
+    "template": 43.6
+   },
+   "best": "name",
+   "worst": "synonym",
+   "gap": 14.3
+  }
+ },
+ "synonym_kinds": {
+  "yolov8s-worldv2": {
+   "synonym": {
+    "n": 35,
+    "name": 44.8,
+    "synonym": 33.3
+   },
+   "near": {
+    "n": 21,
+    "name": 35.4,
+    "synonym": 20.3
+   },
+   "weak": {
+    "n": 14,
+    "name": 29.0,
+    "synonym": 11.0
+   },
+   "expansion": {
+    "n": 5,
+    "name": 44.3,
+    "synonym": 40.1
+   },
+   "scientific": {
+    "n": 2,
+    "name": 32.0,
+    "synonym": 7.6
+   },
+   "spelling": {
+    "n": 1,
+    "name": 42.2,
+    "synonym": 40.2
+   }
+  },
+  "yolov8l-worldv2": {
+   "synonym": {
+    "n": 35,
+    "name": 51.7,
+    "synonym": 40.6
+   },
+   "near": {
+    "n": 21,
+    "name": 42.6,
+    "synonym": 26.2
+   },
+   "weak": {
+    "n": 14,
+    "name": 39.7,
+    "synonym": 16.2
+   },
+   "expansion": {
+    "n": 5,
+    "name": 50.9,
+    "synonym": 49.5
+   },
+   "scientific": {
+    "n": 2,
+    "name": 36.3,
+    "synonym": 13.2
+   },
+   "spelling": {
+    "n": 1,
+    "name": 53.9,
+    "synonym": 54.0
+   }
+  }
+ },
+ "synonym_largest_drops": {
+  "yolov8s-worldv2": [
+   {
+    "class": "giraffe",
+    "synonym": "camelopard",
+    "name_AP": 69.2,
+    "synonym_AP": 12.9
+   },
+   {
+    "class": "bear",
+    "synonym": "bruin",
+    "name_AP": 91.0,
+    "synonym_AP": 38.6
+   },
+   {
+    "class": "toaster",
+    "synonym": "toast maker",
+    "name_AP": 56.4,
+    "synonym_AP": 6.4
+   },
+   {
+    "class": "horse",
+    "synonym": "steed",
+    "name_AP": 67.2,
+    "synonym_AP": 20.3
+   },
+   {
+    "class": "zebra",
+    "synonym": "Equus quagga",
+    "name_AP": 59.7,
+    "synonym_AP": 13.9
+   }
+  ],
+  "yolov8l-worldv2": [
+   {
+    "class": "giraffe",
+    "synonym": "camelopard",
+    "name_AP": 74.2,
+    "synonym_AP": 7.4
+   },
+   {
+    "class": "toaster",
+    "synonym": "toast maker",
+    "name_AP": 59.8,
+    "synonym_AP": 3.8
+   },
+   {
+    "class": "snowboard",
+    "synonym": "snow deck",
+    "name_AP": 55.5,
+    "synonym_AP": 0.0
+   },
+   {
+    "class": "bowl",
+    "synonym": "basin",
+    "name_AP": 55.0,
+    "synonym_AP": 3.7
+   },
+   {
+    "class": "parking meter",
+    "synonym": "parking timer",
+    "name_AP": 50.4,
+    "synonym_AP": 0.0
+   }
+  ]
+ },
+ "vocab_accuracy": {
+  "yolov8s-worldv2": {
+   "80": 39.0,
+   "80+blank": 34.2,
+   "365": 33.6,
+   "1203": 29.2
+  },
+  "yolov8l-worldv2": {
+   "80": 46.7,
+   "80+blank": 41.0,
+   "365": 46.3,
+   "1203": 38.8
+  }
+ },
+ "vocab_speed": {
+  "yolov8s-worldv2": [
+   {
+    "classes": 1,
+    "fps": 93.4,
+    "ms": 10.71,
+    "text_encode_ms": 20.0
+   },
+   {
+    "classes": 10,
+    "fps": 108.7,
+    "ms": 9.2,
+    "text_encode_ms": 12.2
+   },
+   {
+    "classes": 80,
+    "fps": 110.2,
+    "ms": 9.07,
+    "text_encode_ms": 14.1
+   },
+   {
+    "classes": 365,
+    "fps": 108.5,
+    "ms": 9.22,
+    "text_encode_ms": 71.5
+   },
+   {
+    "classes": 1203,
+    "fps": 108.3,
+    "ms": 9.24,
+    "text_encode_ms": 213.0
+   }
+  ],
+  "yolov8l-worldv2": [
+   {
+    "classes": 1,
+    "fps": 83.0,
+    "ms": 12.04,
+    "text_encode_ms": 10.7
+   },
+   {
+    "classes": 10,
+    "fps": 90.4,
+    "ms": 11.06,
+    "text_encode_ms": 11.1
+   },
+   {
+    "classes": 80,
+    "fps": 90.1,
+    "ms": 11.1,
+    "text_encode_ms": 13.8
+   },
+   {
+    "classes": 365,
+    "fps": 90.7,
+    "ms": 11.03,
+    "text_encode_ms": 63.1
+   },
+   {
+    "classes": 1203,
+    "fps": 88.6,
+    "ms": 11.29,
+    "text_encode_ms": 198.9
+   }
+  ]
+ }
+}
