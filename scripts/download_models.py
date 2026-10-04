@@ -3,6 +3,7 @@
 Usage (from the repo root):
     python scripts/download_models.py                 # S/M/L YOLO-World + S/M/L YOLOv8 + CLIP text encoder
     python scripts/download_models.py --small         # only the S models + CLIP (~400 MB)
+    python scripts/download_models.py --experiments   # also YOLOE, Grounding DINO-T and OWLv2 for experiments/
 
 Everything goes into ./weights/ (git-ignored). Safe to re-run: files that are already there are skipped
 (CLIP is checked by SHA-256). At the end it runs an offline smoke test with YOLO-World S.
@@ -56,6 +57,25 @@ def fetch_clip() -> None:
     print(f"  {tag} {Path(path).relative_to(REPO)}  ({human(Path(path).stat().st_size)}, {time.time() - t0:.0f}s)")
 
 
+HF_MODELS = ["IDEA-Research/grounding-dino-tiny", "google/owlv2-base-patch16-ensemble"]
+EXPERIMENT_ASSETS = ["yoloe-v8s-seg.pt", "yoloe-11s-seg.pt", "yoloe-26s-seg.pt", "mobileclip_blt.ts", "mobileclip2_b.ts"]
+
+
+def fetch_experiment_models() -> None:
+    # extra models only used by experiments/: YOLOE (+ its MobileCLIP text encoders), Grounding DINO-T, OWLv2
+    print("YOLOE (successor) and its MobileCLIP text encoders:")
+    for name in EXPERIMENT_ASSETS:
+        fetch_yolo(name)
+    print("Hugging Face checkpoints (stored in the Hugging Face cache, not in weights/):")
+    os.environ["HF_HUB_OFFLINE"] = "0"
+    from huggingface_hub import snapshot_download
+
+    for repo in HF_MODELS:
+        t0 = time.time()
+        path = snapshot_download(repo)
+        print(f"  [cached]     {repo} -> {path}  ({time.time() - t0:.0f}s)")
+
+
 def smoke_test() -> None:
     # load YOLO-World S offline and run set_classes + predict once
     os.environ["YOLO_OFFLINE"] = "1"
@@ -81,6 +101,8 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--small", action="store_true", help="only download the S-size models (plus CLIP)")
     ap.add_argument("--no-test", action="store_true", help="skip the offline smoke test")
+    ap.add_argument("--experiments", action="store_true",
+                    help="also cache the models used only by experiments/ (YOLOE, Grounding DINO-T, OWLv2)")
     args = ap.parse_args()
 
     os.chdir(REPO)  # Ultralytics resolves its weights_dir setting relative to the CWD
@@ -96,6 +118,8 @@ def main() -> None:
         fetch_yolo(f"yolov8{s}.pt")
     print("CLIP ViT-B/32 text encoder (used by YOLO-World's set_classes):")
     fetch_clip()
+    if args.experiments:
+        fetch_experiment_models()
     if not args.no_test:
         print("Offline smoke test:")
         smoke_test()
