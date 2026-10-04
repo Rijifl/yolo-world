@@ -43,6 +43,10 @@ _SUPERVISED = "Supervised on COCO train2017 (all 80 classes) - NOT zero-shot; su
 MODELS = {
     "yolov8s": dict(label="YOLOv8-S (closed-set)", family="ultralytics", kind="yolo", ckpt="weights/yolov8s.pt",
                     open_vocab=False, train=_SUPERVISED),
+    "yolov8m": dict(label="YOLOv8-M (closed-set)", family="ultralytics", kind="yolo", ckpt="weights/yolov8m.pt",
+                    open_vocab=False, train=_SUPERVISED),
+    "yolov8l": dict(label="YOLOv8-L (closed-set)", family="ultralytics", kind="yolo", ckpt="weights/yolov8l.pt",
+                    open_vocab=False, train=_SUPERVISED),
     "yolov8s-worldv2": dict(label="YOLO-World-S v2", family="ultralytics", kind="world",
                             ckpt="weights/yolov8s-worldv2.pt", open_vocab=True,
                             train="O365v1 + GoldG (GQA + Flickr30k, COCO images excluded per paper); weights migrated from official repo"),
