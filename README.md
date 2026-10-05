@@ -2,7 +2,7 @@
 
 <p align="center">
   <b>Detect anything you can name, in real time.</b><br>
-  A demo and a Colab notebook for the CVPR 2024 paper.
+  A demo, a Colab notebook and my own experiments for the CVPR 2024 paper.
 </p>
 
 <p align="center">
@@ -87,6 +87,47 @@ experiments/   11-model accuracy/speed comparison and a prompt/vocabulary study
 results/       CSVs, charts and the full report from my run, plus pre-computed demo images
 scripts/       download the weights, pre-compute the demo images
 ```
+
+## Results
+
+I ran 11 detectors on the same **500 COCO val2017 images** (fixed seed), scored with standard COCO box AP, on **one NVIDIA A100** (Clemson's Palmetto cluster), batch size 1, fp16, no TensorRT. All numbers come from the scripts in `experiments/`. The full tables are in [`results/README_results.md`](results/README_results.md).
+
+<p align="center">
+  <img src="results/compare.png" alt="Accuracy vs speed for 11 detectors" width="95%">
+</p>
+
+| Model | Open vocabulary | AP | FPS |
+|---|:---:|---|---|
+| YOLOv8-S / M / L (closed-set, trained on COCO) | no | 45.8 / 51.1 / 54.7 | 129 / 116 / 109 |
+| **YOLO-World-S / M / L v2** | yes | **39.0 / 44.4 / 46.7** | **106 / 95 / 87** |
+| YOLOE-v8-S / 11-S / 26-S | yes | 35.2 / 35.6 / 38.9 | 119 / 96 / 90 |
+| OWLv2-B/16 | yes | 49.0 | 60 |
+| Grounding DINO-T | yes | 51.0 | 9.6 |
+
+What I found:
+
+- **Open vocabulary has a price.** Next to a closed-set YOLOv8 of the same size (which was trained on COCO itself), YOLO-World is 7 to 8 AP lower and 20 to 30% slower.
+- **The speed claim holds.** YOLO-World-L is about 9 times faster than Grounding DINO-T (87 vs 9.6 FPS). On COCO, Grounding DINO-T is the more accurate of the two (51.0 vs 46.7 AP); the paper's accuracy comparison is on LVIS, not COCO.
+- **The wording of the prompt matters.** For YOLO-World-S, naming the same 80 classes with synonyms drops AP from 39.0 to 25.6. Short descriptions give 32.2, and the template "a photo of a {name}" gives 33.1.
+- **A bigger vocabulary costs accuracy, not speed.** With 1,203 words in the vocabulary, AP on the 80 COCO classes falls from 39.0 to 29.2 (S), while speed stays at 108 to 110 FPS. Adding a single blank entry also lowered AP (39.0 to 34.2).
+
+<p align="center">
+  <img src="results/prompt_study_wording.png" alt="Prompt wording vs AP" width="49%">
+  <img src="results/prompt_study_vocab.png" alt="Vocabulary size vs AP" width="49%">
+</p>
+
+These numbers are **not comparable with Table 2 of the paper**, which reports zero-shot LVIS, Fixed AP, on a V100. COCO's 80 classes are familiar to all of these models.
+
+### Reproduce
+
+```bash
+python scripts/download_models.py --experiments
+python experiments/compare.py
+python experiments/prompt_study.py
+python experiments/make_report.py
+```
+
+The COCO annotations and the 500 images download themselves on the first run. You need a GPU for the timing part.
 
 ## Notes
 
