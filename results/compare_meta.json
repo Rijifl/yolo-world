@@ -15,8 +15,6 @@
     "conf": 0.001,
     "warmup": 10,
     "fp32": false,
-    "allow_throttled": false,
-    "max_minutes": 40.0,
     "gpu_name": "NVIDIA A100 80GB PCIe"
    },
    "env": {
@@ -28,10 +26,8 @@
     "transformers": "5.17.0",
     "os": "Linux-4.18.0-553.150.1.el8_10.x86_64-x86_64-with-glibc2.28",
     "gpu": "NVIDIA A100 80GB PCIe",
-    "power": "unknown",
-    "nvidia_driver": "580.178.04, 300.00 W, 1410 MHz"
+    "nvidia_driver": "580.178.04"
    },
-   "gpu_apps_at_start": "",
    "start": "2026-10-04 15:55",
    "wall_s": 79.1
   },
@@ -51,8 +47,6 @@
     "conf": 0.001,
     "warmup": 10,
     "fp32": false,
-    "allow_throttled": false,
-    "max_minutes": 40.0,
     "gpu_name": "NVIDIA A100 80GB PCIe"
    },
    "env": {
@@ -64,10 +58,8 @@
     "transformers": "5.17.0",
     "os": "Linux-4.18.0-553.150.1.el8_10.x86_64-x86_64-with-glibc2.28",
     "gpu": "NVIDIA A100 80GB PCIe",
-    "power": "unknown",
-    "nvidia_driver": "580.178.04, 300.00 W, 1410 MHz"
+    "nvidia_driver": "580.178.04"
    },
-   "gpu_apps_at_start": "",
    "start": "2026-10-04 15:55",
    "wall_s": 129.3
   },
@@ -84,8 +76,6 @@
     "conf": 0.001,
     "warmup": 10,
     "fp32": false,
-    "allow_throttled": false,
-    "max_minutes": 40.0,
     "gpu_name": "NVIDIA A100 80GB PCIe"
    },
    "env": {
@@ -97,10 +87,8 @@
     "transformers": "5.17.0",
     "os": "Linux-4.18.0-553.150.1.el8_10.x86_64-x86_64-with-glibc2.28",
     "gpu": "NVIDIA A100 80GB PCIe",
-    "power": "unknown",
-    "nvidia_driver": "580.178.04, 300.00 W, 1410 MHz"
+    "nvidia_driver": "580.178.04"
    },
-   "gpu_apps_at_start": "",
    "start": "2026-10-04 15:55",
    "wall_s": 192.0
   },
@@ -126,8 +114,6 @@
     "conf": 0.001,
     "warmup": 10,
     "fp32": false,
-    "allow_throttled": false,
-    "max_minutes": 30.0,
     "gpu_name": "NVIDIA A100 80GB PCIe"
    },
    "env": {
@@ -139,10 +125,8 @@
     "transformers": "5.17.0",
     "os": "Linux-4.18.0-553.150.1.el8_10.x86_64-x86_64-with-glibc2.28",
     "gpu": "NVIDIA A100 80GB PCIe",
-    "power": "unknown",
-    "nvidia_driver": "580.178.04, 300.00 W, 1410 MHz"
+    "nvidia_driver": "580.178.04"
    },
-   "gpu_apps_at_start": "",
    "start": "2026-10-04 15:59",
    "wall_s": 188.7
   }

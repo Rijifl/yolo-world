@@ -1,8 +1,7 @@
-"""Pre-bake the demo results (offline fallback for the slides).
+"""Pre-compute the demo results, in case the live demo can't run.
 
 Runs YOLO-World and YOLOv8 on every sample image (SAMPLES in demo/core.py) and writes
 results/demo/<name>_side_by_side.png and results/demo/prebaked.json.
-Boxes and scores are exactly what the models output.
 
 Usage (from the repo root):  python scripts/prebake.py [--size S] [--conf 0.1]
 """
@@ -120,7 +119,7 @@ def main() -> None:
         "timing_note": ("inference_ms = model forward pass only (Ultralytics' timer), median of "
                         f"{args.repeats} runs after warm-up; predict_ms adds pre-processing and NMS. "
                         "text_encoding_ms_once = CLIP text encoding of the vocabulary, done once per vocabulary."),
-        "gpu_sharing_note": f"Run on {DEVICE_NAME}; timings are indicative, not a clean benchmark.",
+        "device_note": f"Run on {DEVICE_NAME}; timings are indicative, not a clean benchmark.",
         "failure_cases": [r["image"] for r in records if r["failure_case"]],
         "images": records,
     }

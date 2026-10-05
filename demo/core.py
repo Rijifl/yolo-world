@@ -5,12 +5,12 @@ from __future__ import annotations
 import os
 import threading
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 
-# offline / quiet settings. These have to be set before ultralytics is imported, otherwise it tries
-# to reach the network (update checks, telemetry, font download, Hugging Face calls).
-os.environ.setdefault("YOLO_OFFLINE", "1")  # ultralytics: treat as offline (no GitHub / telemetry calls)
+# these have to be set before ultralytics is imported, otherwise it tries to reach the network
+# (update checks, telemetry, font download, Hugging Face calls)
+os.environ.setdefault("YOLO_OFFLINE", "1")
 os.environ.setdefault("YOLO_VERBOSE", "False")
 os.environ.setdefault("HF_HUB_OFFLINE", "1")
 os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
@@ -26,13 +26,8 @@ IMAGES = REPO / "demo" / "images"
 
 import ultralytics.nn.text_model as _tm
 from ultralytics import YOLO, YOLOWorld
-from ultralytics.utils import SETTINGS
 
-_tm.WEIGHTS_DIR = WEIGHTS  # CLIP ViT-B/32 is looked up in <repo>/weights/clip, independent of the CWD
-try:
-    SETTINGS["sync"] = False  # in-memory only: disables anonymous usage events for this process
-except Exception:  # settings object may be read-only in some versions
-    pass
+_tm.WEIGHTS_DIR = WEIGHTS  # CLIP ViT-B/32 is looked up in <repo>/weights/clip
 
 SIZES = ("S", "M", "L")
 _FORCE_CPU = os.environ.get("DEMO_DEVICE", "").lower() == "cpu"  # set DEMO_DEVICE=cpu to bypass the GPU
@@ -58,7 +53,7 @@ def _gpu_responsive(timeout_s: float = 60.0) -> bool:
     except subprocess.TimeoutExpired:
         return False
     except Exception:
-        return True  # could not run the probe for an unrelated reason -> do not block the GPU path
+        return True  # the probe itself failed, so just try the GPU
 
 
 if DEVICE == 0 and os.environ.get("DEMO_SKIP_GPU_CHECK", "") != "1":
@@ -70,7 +65,7 @@ if DEVICE == 0 and os.environ.get("DEMO_SKIP_GPU_CHECK", "") != "1":
 GPU_CALL_TIMEOUT_S = 30.0  # the app reports an error instead of spinning forever if one inference stalls
 
 DEFAULT_VOCAB = "person, guitar, microphone, helmet, sunglasses, flag, lamp, traffic cone, statue, backpack"
-MAX_CLASSES = 200  # hard cap so a runaway paste cannot blow up GPU memory
+MAX_CLASSES = 200
 DEFAULT_CONF = 0.10  # YOLO-World scores run lower than closed-set scores; 0.05-0.2 works well
 DEFAULT_CONF_CLOSED = 0.25  # Ultralytics' default for YOLOv8
 
@@ -89,16 +84,15 @@ SAMPLES = [
      "note": ("Threshold raised to 0.3 to hide weak duplicates. Adding 'fireplace' to this vocabulary makes "
               "YOLO-World-S label the piano as 'fireplace' (0.51) - a second, milder failure mode.")},
     {"file": "statue_bench.jpg", "vocab": "statue, person, bench, handbag", "failure_case": True,
-     "note": ("Deliberate failure case: the bronze statues are labelled 'person' (by both models) and "
+     "note": ("Failure case: the bronze statues are labeled 'person' (by both models) and "
               "'statue' is never output while 'person' is also in the vocabulary. Region-text matching "
               "picks the more frequent training concept; try removing 'person' from the vocabulary live.")},
 ]
 
 
-# Everyday words -> the COCO-80 class that covers them. Used so the UI never claims YOLOv8 "cannot" find something
-# it actually has a class for (e.g. necktie = tie). Rule: a word is listed as "no COCO class" only if neither the
-# word itself nor a synonym below is one of YOLOv8's 80 class names. Ambiguous cases (coffee table ~ dining table)
-# are mapped to the COCO class on purpose, to err on the side of NOT over-claiming.
+# Everyday words and the COCO-80 class that covers them, so the UI doesn't say YOLOv8 has no class for
+# something it does have (necktie is "tie" in COCO). Unclear cases like coffee table / dining table are
+# mapped to the COCO class.
 COCO_SYNONYMS = {
     "people": "person", "man": "person", "woman": "person", "men": "person", "women": "person", "child": "person",
     "kid": "person", "boy": "person", "girl": "person", "human": "person", "pedestrian": "person", "guy": "person",
@@ -137,7 +131,7 @@ def coco_class_for(word: str, coco_names: set[str]) -> str | None:
 
 
 def parse_vocab(text: str | None) -> list[str]:
-    """Comma/semicolon/newline separated names -> trimmed, de-duplicated (case-insensitive), non-empty list."""
+    """Split on commas/semicolons/newlines, trim, and drop empty and repeated names (case-insensitive)."""
     if not text:
         return []
     for sep in (";", "\n", "\r", "\t"):
@@ -172,14 +166,13 @@ class RunResult:
     inference_ms: float  # model forward pass only (Ultralytics' own timer)
     predict_ms: float  # preprocess + forward + NMS (Ultralytics' three timers summed)
     encode_ms: float | None = None  # CLIP text encoding time if the vocabulary was (re-)encoded on this call
-    extra: dict = field(default_factory=dict)
 
 
 class ModelBank:
     """Loads models lazily, keeps them on the GPU, and re-encodes the vocabulary only when it changes."""
 
     def __init__(self) -> None:
-        self.lock = threading.Lock()  # one GPU, one request at a time -> no races, predictable timings
+        self.lock = threading.Lock()  # one GPU, one request at a time
         self.world: dict[str, YOLOWorld] = {}
         self.closed: dict[str, YOLO] = {}
         self.vocab: dict[str, tuple[str, ...]] = {}  # current encoded vocabulary per YOLO-World size
@@ -235,7 +228,7 @@ class ModelBank:
             encode_ms=encode_ms,
         )
 
-    def run_world(self, img: np.ndarray, vocab: list[str], size: str = "S", conf: float = 0.15,
+    def run_world(self, img: np.ndarray, vocab: list[str], size: str = "S", conf: float = DEFAULT_CONF,
                   iou: float = 0.5, imgsz: int = 640) -> RunResult:
         with self.lock:
             m = self._world(size)
@@ -263,7 +256,7 @@ class ModelBank:
             return self._to_result(r)
 
 
-# drawing (big boxes and labels, for the projector)
+# drawing (big boxes and labels so they can be read on a projector)
 _PALETTE = [
     (255, 56, 56), (0, 194, 255), (255, 178, 29), (72, 249, 10), (207, 210, 49), (146, 204, 23),
     (61, 219, 134), (26, 147, 52), (0, 212, 187), (44, 153, 168), (52, 69, 147), (100, 115, 255),
@@ -340,12 +333,11 @@ def _wrap(draw: ImageDraw.ImageDraw, text: str, font, max_w: int) -> list[str]:
 
 def draw_detections(img: np.ndarray | Image.Image, dets: list[Detection], title: str | None = None,
                     subtitle: str | None = None, title_color=(30, 30, 30), min_long_side: int = 0) -> Image.Image:
-    """Draw thick boxes + large labels (projector friendly).
+    """Draw thick boxes and large labels.
 
-    * boxes first, then all labels on top, so a big box never hides a small object's label
-    * each label tries several spots (above the box, inside top, below, inside bottom) and takes the one that
-      overlaps least with labels already placed -> readable even in crowded scenes (e.g. many cones)
-    * `min_long_side` upsamples small images first so text stays crisp in slides
+    Boxes are drawn first and labels on top, so a big box never hides a small object's label. Each label tries
+    four spots (above the box, inside top, below, inside bottom) and takes the one that overlaps least with the
+    labels already placed. `min_long_side` upsamples small images first so the text stays sharp.
     """
     im = img.copy() if isinstance(img, Image.Image) else Image.fromarray(img)
     im = im.convert("RGB")
@@ -375,7 +367,7 @@ def draw_detections(img: np.ndarray | Image.Image, dets: list[Detection], title:
         for i, ty in enumerate(cands):
             ty = min(max(0, ty), H - th)
             r = (tx, ty, tx + tw, ty + th)
-            cost = sum(_overlap(r, p) for p in placed) + i * 0.01  # tie-break: prefer the natural order
+            cost = sum(_overlap(r, p) for p in placed) + i * 0.01  # ties go to the earlier spot
             if best_cost is None or cost < best_cost:
                 best, best_cost = r, cost
         placed.append(best)

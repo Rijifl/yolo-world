@@ -32,6 +32,7 @@ MAX_SIDE = 1280  # downscale big uploads (phone photos) before anything else
 
 bank = ModelBank()
 COCO80: set[str] = set()
+LOADED: list[str] = list(SIZES)  # sizes offered in the UI; main() narrows it to --sizes
 
 
 # helpers
@@ -75,16 +76,16 @@ def _guarded(fn, *args, **kwargs):
 
 
 def detect(image, vocab_text, size, conf, conf_closed):
-    """Returns (world_img, closed_img, world_md, closed_md, status_md). Never raises."""
+    """Returns (world_img, closed_img, world_md, closed_md, status_md)."""
     empty = (None, None, "", "", "")
     try:
         if image is None:
             return (*empty[:4], _error_box("Pick a sample image below or upload one first."))
         vocab = parse_vocab(vocab_text)
         img = _downscale(load_image(image))
-        size = size if size in SIZES else "S"
+        size = size if size in LOADED else LOADED[0]
 
-        # closed-set baseline always runs (it does not care about your words)
+        # the closed-set model runs no matter what the words are
         closed = _guarded(bank.run_closed, img, size, conf=float(conf_closed))
         closed_img = draw_detections(img, closed.detections, min_long_side=960)
         not_in_coco = [w for w in vocab if coco_class_for(w, COCO80) is None]
@@ -102,7 +103,7 @@ def detect(image, vocab_text, size, conf, conf_closed):
             )
         if mapped:
             closed_md += ("<div class='note'>Your words map to COCO classes: "
-                          + html.escape(", ".join(f"{w} -> {c}" for w, c in mapped)) + "</div>")
+                          + html.escape(", ".join(f"{w} = {c}" for w, c in mapped)) + "</div>")
 
         if not vocab:
             status = _error_box(
@@ -142,7 +143,7 @@ def detect(image, vocab_text, size, conf, conf_closed):
     except torch.cuda.OutOfMemoryError:
         torch.cuda.empty_cache()
         return (*empty[:4], _error_box("GPU ran out of memory. Try a smaller model size or fewer words."))
-    except Exception as e:  # show, don't crash
+    except Exception as e:
         traceback.print_exc()
         return (*empty[:4], _error_box(f"Something went wrong: {html.escape(type(e).__name__)}: "
                                        f"{html.escape(str(e))[:400]}"))
@@ -190,7 +191,7 @@ def build_ui() -> gr.Blocks:
                                    placeholder="e.g. person, guitar, helmet, sunglasses, flag")
                 status = gr.HTML()
             with gr.Column(scale=2, min_width=260):
-                size = gr.Radio(list(SIZES), value="S", label="Model size (both models)")
+                size = gr.Radio(LOADED, value=LOADED[0], label="Model size (both models)")
                 conf = gr.Slider(0.01, 0.9, value=samples[0][2] if samples else DEFAULT_CONF, step=0.01,
                                  label="YOLO-World confidence threshold")
                 run = gr.Button("Detect", variant="primary", elem_id="run")
@@ -223,7 +224,7 @@ def build_ui() -> gr.Blocks:
             "only (Ultralytics' own timer); the value in brackets adds image pre-processing and NMS. "
             "YOLO-World's text encoder (CLIP ViT-B/32) runs only when the vocabulary changes: the words are "
             "encoded once and the embeddings are cached and reused (the paper's \"prompt-then-detect\" idea; the paper "
-            "additionally re-parameterizes them into the weights, which this demo does NOT do). "
+            "additionally re-parameterizes them into the weights, which this demo does not do). "
             "Sample images: COCO val2017 (Flickr, CC BY / CC BY-SA), "
             "see demo/images/ATTRIBUTION.md.</div>"
         )
@@ -245,13 +246,14 @@ def main() -> None:
     ap.add_argument("--share", action="store_true", help="create a public gradio.live link (needs internet)")
     ap.add_argument("--port", type=int, default=7860)
     ap.add_argument("--host", default="127.0.0.1", help="use 0.0.0.0 to reach it from another device on the LAN")
-    ap.add_argument("--sizes", default="SML", help="model sizes to pre-load and warm up, e.g. S or SML")
+    ap.add_argument("--sizes", default="SML", help="model sizes to load and offer in the UI, e.g. S or SML")
     ap.add_argument("--no-browser", action="store_true", help="do not open a browser tab")
     args = ap.parse_args()
 
     global COCO80
     print(f"YOLO-World demo | device: {DEVICE_NAME} | torch {torch.__version__}")
-    sizes = [s for s in args.sizes.upper() if s in SIZES] or ["S"]
+    sizes = [s for s in SIZES if s in args.sizes.upper()] or ["S"]
+    LOADED[:] = sizes
     t0 = time.time()
     print(f"Loading + warming up models {sizes} (one-time, before the UI opens)...")
     bank.warmup(sizes)

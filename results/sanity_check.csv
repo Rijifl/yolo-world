@@ -1,5 +1,5 @@
 model,pipeline,n_images,AP,AP50,AP75,APs,APm,APl,ultralytics_internal_mAP,official_reference_AP
-yolov8s,"compare.py predict() path (single-label NMS, max_det 100)",500,45.81,63.62,49.01,29.17,49.67,62.04,,"44.9 (Ultralytics docs, full val2017, 5000 imgs)"
-yolov8s-worldv2,"compare.py predict() path (single-label NMS, max_det 100)",500,39.04,54.25,42.43,25.49,43.92,52.57,,"37.7 (Ultralytics docs, zero-shot COCO val2017)"
+yolov8s,"compare.py predict() path (single-label NMS, max_det 100)",500,45.809,63.617,49.010,29.165,49.672,62.038,,"44.9 (Ultralytics docs, full val2017, 5000 imgs)"
+yolov8s-worldv2,"compare.py predict() path (single-label NMS, max_det 100)",500,39.036,54.255,42.426,25.488,43.917,52.569,,"37.7 (Ultralytics docs, zero-shot COCO val2017)"
 yolov8s,"Ultralytics model.val() (multi-label NMS, max_det 300 -> top-100 per image)",500,46.43,64.67,49.89,29.82,50.54,63.06,45.84,"44.9 (Ultralytics docs, full val2017, 5000 imgs)"
 yolov8s-worldv2,"Ultralytics model.val() (multi-label NMS, max_det 300 -> top-100 per image)",500,40.02,54.88,44.12,25.79,44.91,56.04,39.49,"37.7 (Ultralytics docs, zero-shot COCO val2017)"

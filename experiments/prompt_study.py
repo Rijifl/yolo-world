@@ -3,16 +3,17 @@
 Same 500-image COCO val2017 subset and predict() pipeline as compare.py (YOLO-World v2 via Ultralytics).
 Rows go to results/prompt_study.csv, keyed by (part, model, condition, n_images).
 
-  A  wording -> accuracy. The 80 COCO classes with four wordings from experiments/prompts.json: the COCO name,
+  A  wording and accuracy. The 80 COCO classes with four wordings from experiments/prompts.json: the COCO name,
      one synonym, a short description, and the template "a photo of a {name}". The ground truth is unchanged.
      Per-class AP goes to results/prompt_study_per_class.csv.
-  B  vocabulary size -> speed. Vocabularies of 1, 10, 80, 365 and ~1200 classes (COCO names first, then LVIS
+  B  vocabulary size and speed. Vocabularies of 1, 10, 80, 365 and ~1200 classes (COCO names first, then LVIS
      names in a fixed random order). Text-encoding time (once per vocabulary) and batch-1 ms/image.
      Run it with nothing else on the GPU.
-  C  vocabulary size -> accuracy. The 80 COCO names alone, with one blank " " entry appended (the padding the
-     YOLO-World authors recommend), and with LVIS names added as distractors. AP is scored on the 80 COCO
-     classes; boxes labelled with a distractor are dropped. All conditions use max_det=300, then the top 100
-     COCO-class boxes per image, so distractors cannot use up the 100-box budget.
+  C  vocabulary size and accuracy. The 80 COCO names alone, with one blank " " entry appended (the padding the
+     official YOLO-World demos add), and with LVIS names added as extra words. AP is scored on the 80 COCO
+     classes. predict() keeps one label per box, and a box whose label is one of the extra words is dropped,
+     so a box that goes to a near-synonym (LVIS "sofa" for COCO "couch") counts as a miss. All conditions use
+     max_det=300, then the top 100 COCO-class boxes per image, so extra words cannot use up the 100 boxes.
 Charts: results/prompt_study_wording.png (A), prompt_study_vocab.png (C), prompt_study_speed.png (B).
 
 Run:
@@ -26,7 +27,7 @@ import argparse
 import json
 import os
 import random
-import threading
+import sys
 import time
 from pathlib import Path
 
@@ -35,9 +36,9 @@ os.environ.setdefault("HF_HUB_OFFLINE", "1")
 import numpy as np
 import pandas as pd
 
-from common import (RESULTS, SEED, Timer, clean_lvis_names, clock_throttled, coco_eval, coco_eval_per_class,
-                    coco_names, ensure_images, env_info, file_lock, is_cuda, load_coco, load_images_rgb, log,
-                    plot_style, probe_clock_under_load, seed_everything, subset_ids, to_coco_dets, wait_for_gpu)
+from common import (RESULTS, SEED, Timer, clean_lvis_names, coco_eval, coco_eval_per_class, coco_names,
+                    ensure_images, env_info, is_cuda, load_coco, load_images_rgb, log, plot_style, seed_everything,
+                    subset_ids, to_coco_dets)
 
 CSV = RESULTS / "prompt_study.csv"
 CSV_CLASS = RESULTS / "prompt_study_per_class.csv"
@@ -49,21 +50,20 @@ WORLD = {
 }
 VARIANTS = ["name", "synonym", "description", "template"]
 VARIANT_LABEL = {"name": "COCO\nname", "synonym": "synonym", "description": "short\ndescription",
-                 "template": '"a photo\nof a …"'}
+                 "template": '"a photo\nof a ..."'}
 SIZES = [1, 10, 80, 365, 1203]
 KEY = ["part", "model", "condition", "n_images"]
 
 
 def upsert(csv: Path, rows: list[dict], key: list[str]) -> None:
-    with file_lock(csv):
-        df = pd.read_csv(csv, dtype={"condition": str}) if csv.exists() else pd.DataFrame()
-        new = pd.DataFrame(rows)
-        if len(df):
-            old = df.merge(new[key].drop_duplicates(), on=key, how="left", indicator=True)
-            df = pd.concat([df[(old["_merge"] == "left_only").values], new], ignore_index=True)
-        else:
-            df = new
-        df.to_csv(csv, index=False)
+    df = pd.read_csv(csv, dtype={"condition": str}) if csv.exists() else pd.DataFrame()
+    new = pd.DataFrame(rows)
+    if len(df):
+        old = df.merge(new[key].drop_duplicates(), on=key, how="left", indicator=True)
+        df = pd.concat([df[(old["_merge"] == "left_only").values], new], ignore_index=True)
+    else:
+        df = new
+    df.to_csv(csv, index=False)
 
 
 def build_vocab(names: list[str], size: int) -> list[str]:
@@ -75,7 +75,7 @@ def build_vocab(names: list[str], size: int) -> list[str]:
 
 
 def predict_all(r, ims, ids, cat_ids, conf, n_coco=80, max_det=100):
-    """Detections in COCO json format; class indices >= n_coco (distractors) are dropped, top-100 kept."""
+    """Detections in COCO json format; class indices >= n_coco (the extra words) are dropped, top 100 kept."""
     dets = []
     for iid, im in zip(ids, ims):
         b, s, c = r.predict(im, conf=conf, max_det=max_det)
@@ -123,14 +123,9 @@ def part_c(key, r, args, coco, ids, cat_ids, names, bgr, base):
 # part B (timed)
 def part_b(key, r, args, ids, names, bgr, base):
     cuda = is_cuda(args.device)
-    wait_for_gpu()
     r.set_vocab(list(names))  # loads the CLIP text encoder, so the per-size encoding times below are warm
     for im in bgr[: args.warmup]:
         r.predict(im, conf=args.conf)
-    clock = probe_clock_under_load(args.device)
-    log(f"[B] {key}: GPU state under load: {clock}")
-    if not args.allow_throttled and clock_throttled(clock):
-        raise SystemExit(f"GPU appears throttled ({clock}); refusing to time. Pass --allow-throttled to override.")
     rows = []
     for size in SIZES:
         vocab = build_vocab(names, size)
@@ -149,12 +144,12 @@ def part_b(key, r, args, ids, names, bgr, base):
                 r.predict(im, conf=0.25)
             t25.append(T.ms)
         t = np.array(t)
+        med = round(float(np.median(t)), 2)  # median, same as compare.py
         row = {**base, "part": "B", "condition": str(len(vocab)), "vocab_size": len(vocab),
                "text_encode_ms": round(enc_ms, 1), "ms_per_img_mean": round(float(t.mean()), 2),
-               "ms_per_img_median": round(float(np.median(t)), 2), "fps": round(1000.0 / float(t.mean()), 1),
-               "ms_per_img_conf0.25_first100": round(float(np.mean(t25)), 2),
-               "gpu_sm_mhz_under_load": clock.get("sm_mhz")}
-        log(f"[B] {key} vocab {len(vocab)}: {row['ms_per_img_mean']} ms/img, {row['fps']} FPS, "
+               "ms_per_img_median": med, "fps": round(1000.0 / med, 1),
+               "ms_per_img_conf0.25_first100": round(float(np.mean(t25)), 2)}
+        log(f"[B] {key} vocab {len(vocab)}: {med} ms/img (median), {row['fps']} FPS, "
             f"text encoding {row['text_encode_ms']} ms")
         rows.append(row)
     upsert(CSV, rows, KEY)
@@ -169,7 +164,7 @@ def plot(n_images: int | None = None) -> None:
         n_images = int(df["n_images"].max())
     df = df[df["n_images"] == n_images]
     plt = plot_style()
-    # these charts are shown at half slide width, so the text is larger than in compare.png
+    # these charts are narrower than compare.png, so the text is bigger
     plt.rcParams.update({"font.size": 22, "axes.titlesize": 23, "axes.labelsize": 23, "xtick.labelsize": 21,
                          "ytick.labelsize": 21, "legend.fontsize": 19})
     colors = {"yolov8s-worldv2": "#56B4E9", "yolov8l-worldv2": "#0072B2"}
@@ -177,7 +172,7 @@ def plot(n_images: int | None = None) -> None:
 
     a = df[df["part"] == "A"]
     if len(a):
-        fig, ax = plt.subplots(figsize=(9, 6.6))  # slide 12 gives each chart about half the slide width
+        fig, ax = plt.subplots(figsize=(9, 6.6))
         w = 0.8 / max(len(models), 1)
         for i, k in enumerate(models):
             vals = [a[(a["model"] == k) & (a["condition"] == v)]["AP"].mean() for v in VARIANTS]
@@ -228,8 +223,8 @@ def plot(n_images: int | None = None) -> None:
         ax.set_xticks(sorted(set(b["vocab_size"])), [str(v) for v in sorted(set(b["vocab_size"]))])
         ax.set_ylim(0, ax.get_ylim()[1] * 1.15)
         gpu = next((g for g in b["gpu"].dropna()), "GPU")
-        ax.set_xlabel("Vocabulary size (classes, log scale)")
-        ax.set_ylabel(f"FPS (batch 1) - {gpu}")
+        ax.set_xlabel(f"Vocabulary size (classes, log scale)\n{gpu}, batch 1")
+        ax.set_ylabel("FPS")
         ax.set_title("Speed as the vocabulary grows")
         ax.legend(loc="lower left")
         fig.tight_layout()
@@ -246,19 +241,14 @@ def main():
     p.add_argument("--conf", type=float, default=0.001)
     p.add_argument("--warmup", type=int, default=10)
     p.add_argument("--fp32", action="store_true")
-    p.add_argument("--allow-throttled", action="store_true")
-    p.add_argument("--max-minutes", type=float, default=60, help="watchdog: hard-exit after this many minutes")
     args = p.parse_args()
 
-    _wd = threading.Timer(args.max_minutes * 60, lambda: (log("WATCHDOG: max-minutes exceeded, exiting"), os._exit(3)))
-    _wd.daemon = True
-    _wd.start()
     seed_everything()
     t_start = time.time()
     parts = [x for x in args.parts if x != "plot"]
     if not parts:
         plot(args.n_images)
-        os._exit(0)
+        return
     from runners import UltralyticsRunner
 
     info = env_info()
@@ -282,9 +272,7 @@ def main():
                     part_c(key, r, args, coco, ids, cat_ids, names, bgr, base)
                 else:
                     part_b(key, r, args, ids, names, bgr, base)
-            except SystemExit:
-                raise
-            except Exception:  # report the failure and continue with the next part / model
+            except Exception:  # keep going with the next part / model
                 import traceback
 
                 traceback.print_exc()
@@ -293,7 +281,8 @@ def main():
         del r
     plot(len(ids))
     log(f"done in {time.time() - t_start:.0f}s")
-    os._exit(1 if failed else 0)
+    if failed:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

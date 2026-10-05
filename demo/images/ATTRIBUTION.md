@@ -1,14 +1,10 @@
 # Sample image attribution
 
-All eight sample images are from the **COCO 2017 validation set** (Lin et al., *Microsoft COCO: Common
-Objects in Context*, ECCV 2014, https://cocodataset.org), which redistributes Flickr photos under the
-Creative Commons license recorded for each image in `instances_val2017.json`. Only images with a license
-that allows redistribution and modification (CC BY 2.0 or CC BY-SA 2.0, no NonCommercial/NoDerivs terms)
-were chosen. Author names were taken from the photo's Flickr page (checked 2026-09-29).
-
-The files are the unmodified COCO JPEGs (≤ 640 px, < 250 KB each), only renamed. The annotated versions in
-`results/demo/` are adaptations (boxes and labels drawn on top); those derived from CC BY-SA photos are
-shared under CC BY-SA 2.0 as well.
+The eight sample images are from the COCO 2017 validation set (Lin et al., *Microsoft COCO: Common Objects
+in Context*, ECCV 2014, https://cocodataset.org). They are Flickr photos under CC BY 2.0 or CC BY-SA 2.0; the
+license below is the one recorded for each image in `instances_val2017.json`, and the author names are from
+the Flickr pages. The files are the original COCO JPEGs, only renamed. The versions in `results/demo/` have
+boxes and labels drawn on them and keep the license of the photo.
 
 | File | COCO id | Author (Flickr) | License (as recorded by COCO) | Source |
 |---|---|---|---|---|
@@ -21,4 +17,4 @@ shared under CC BY-SA 2.0 as well.
 | `bedroom_lamp.jpg` | 403353 | Zepfanman.com | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/) | [Flickr](https://www.flickr.com/photos/zepfanman/8245255095/), [COCO](http://images.cocodataset.org/val2017/000000403353.jpg) |
 | `living_room.jpg` | 367569 | Jennifer Smith | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0/) | [Flickr](https://www.flickr.com/photos/niff/7409214738/), [COCO](http://images.cocodataset.org/val2017/000000367569.jpg) |
 
-The COCO annotations themselves are © COCO Consortium, CC BY 4.0.
+The COCO annotations are by the COCO Consortium, CC BY 4.0.

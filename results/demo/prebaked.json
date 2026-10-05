@@ -6,7 +6,7 @@
   "python": "3.12.6",
   "imgsz": 640,
   "timing_note": "inference_ms = model forward pass only (Ultralytics' timer), median of 3 runs after warm-up; predict_ms adds pre-processing and NMS. text_encoding_ms_once = CLIP text encoding of the vocabulary, done once per vocabulary.",
-  "gpu_sharing_note": "Run on CPU; timings are indicative, not a clean benchmark.",
+  "device_note": "Run on CPU; timings are indicative, not a clean benchmark.",
   "failure_cases": [
     "demo/images/guitar_stage.jpg",
     "demo/images/statue_bench.jpg"

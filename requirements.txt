@@ -1,4 +1,4 @@
-# Versions actually installed and tested (Windows 11, Python 3.12, RTX 3050 Laptop GPU, CUDA 12.4 wheels).
+# Tested with Python 3.12 on Windows 11 and Linux (CUDA 12.4 wheels).
 #
 # PyTorch with CUDA comes from PyTorch's own index. Install it FIRST:
 #   pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu124

@@ -1,45 +1,45 @@
 """Experiment 1: accuracy and speed of closed-set and open-vocabulary detectors on a COCO val2017 subset.
 
-Phases (ap and timing write to the same results/compare.csv, one row per (model, n_images)):
+ap and timing write to the same results/compare.csv, one row per (model, n_images):
   --phase ap      pycocotools bbox AP on the subset, plus VRAM peak and params.
   --phase timing  batch-1 latency/FPS after warm-up and text-encoding cost. Run it with nothing else on the GPU.
-                  Stops if the GPU is stuck in a low-clock state (unless --allow-throttled).
   --phase plot    redraw results/compare.png/.svg from the CSV.
   --phase all     ap + timing + plot.
-The AP phase can run as several processes with different --models; rows are merged into the CSV under a lock.
 
 Run:
   python -u experiments/compare.py --phase ap --n-images 500 --device cuda:0
   python -u experiments/compare.py --phase timing --n-images 500 --device cuda:0
 
 All models: the 80 plain COCO category names as vocabulary, score threshold 0.001, max 100 detections per image,
-fp16 (--fp32 to change), batch size 1. Timing is the mean wall-clock time per image for preprocess + forward +
-postprocess (CUDA-synchronised), excluding disk I/O and JPEG decode.
+fp16 (--fp32 to change), batch size 1. Timing is wall-clock time per image for preprocess + forward +
+postprocess, excluding disk I/O and JPEG decode. FPS is 1000 / median ms (the mean is also saved).
+
+The Ultralytics models go through predict(), which keeps one class per box. OWLv2 and Grounding DINO keep the
+top 100 (box, class) pairs. sanity_check.py measures what that costs the YOLO models (about 0.6 to 1.0 AP).
 """
 from __future__ import annotations
 
 import argparse
 import json
 import os
-import threading
 import time
 
-os.environ.setdefault("HF_HUB_OFFLINE", "1")  # checkpoints are pre-downloaded; never hit the network mid-timing
+os.environ.setdefault("HF_HUB_OFFLINE", "1")  # checkpoints are downloaded beforehand
 
 import numpy as np
 import pandas as pd
 
-from common import (DATA, RESULTS, Timer, clock_throttled, coco_eval, coco_names, ensure_images, env_info,
-                    file_lock, gpu_apps, is_cuda, load_coco, load_images_rgb, log, other_gpu_python_procs,
-                    plot_style, probe_clock_under_load, seed_everything, subset_ids, to_coco_dets, wait_for_gpu)
+from common import (DATA, RESULTS, Timer, coco_eval, coco_names, ensure_images, env_info, is_cuda, load_coco,
+                    load_images_rgb, log, plot_style, seed_everything, subset_ids, to_coco_dets)
 
 CSV = RESULTS / "compare.csv"
 META = RESULTS / "compare_meta.json"
 DETS = DATA / "dets"
 
-_SUPERVISED = "Supervised on COCO train2017 (all 80 classes) - NOT zero-shot; supervised reference"
+_SUPERVISED = "Supervised on COCO train2017 (all 80 classes)"
+_WORLD = "O365v1 + GoldG (GQA + Flickr30k, COCO images excluded), per the official model zoo; converted by Ultralytics"
+_YOLOE = "O365v1 + GoldG (GQA + Flickr30k, COCO images excluded) with SAM 2.1 pseudo-masks (YOLOE paper)"
 
-# Training-data notes: see results/README_results.md for full sources.
 MODELS = {
     "yolov8s": dict(label="YOLOv8-S (closed-set)", family="ultralytics", kind="yolo", ckpt="weights/yolov8s.pt",
                     open_vocab=False, train=_SUPERVISED),
@@ -48,20 +48,17 @@ MODELS = {
     "yolov8l": dict(label="YOLOv8-L (closed-set)", family="ultralytics", kind="yolo", ckpt="weights/yolov8l.pt",
                     open_vocab=False, train=_SUPERVISED),
     "yolov8s-worldv2": dict(label="YOLO-World-S v2", family="ultralytics", kind="world",
-                            ckpt="weights/yolov8s-worldv2.pt", open_vocab=True,
-                            train="O365v1 + GoldG (GQA + Flickr30k, COCO images excluded per paper); weights migrated from official repo"),
+                            ckpt="weights/yolov8s-worldv2.pt", open_vocab=True, train=_WORLD),
     "yolov8m-worldv2": dict(label="YOLO-World-M v2", family="ultralytics", kind="world",
-                            ckpt="weights/yolov8m-worldv2.pt", open_vocab=True,
-                            train="O365v1 + GoldG (GQA + Flickr30k, COCO images excluded per paper); weights migrated from official repo"),
+                            ckpt="weights/yolov8m-worldv2.pt", open_vocab=True, train=_WORLD),
     "yolov8l-worldv2": dict(label="YOLO-World-L v2", family="ultralytics", kind="world",
-                            ckpt="weights/yolov8l-worldv2.pt", open_vocab=True,
-                            train="O365v1 + GoldG (GQA + Flickr30k, COCO images excluded per paper); weights migrated from official repo"),
+                            ckpt="weights/yolov8l-worldv2.pt", open_vocab=True, train=_WORLD),
     "yoloe-v8s": dict(label="YOLOE-v8-S", family="ultralytics", kind="yoloe", ckpt="weights/yoloe-v8s-seg.pt",
-                      open_vocab=True, train="O365v1 + GoldG (GQA + Flickr30k) with SAM masks (Ultralytics docs)"),
+                      open_vocab=True, train=_YOLOE),
     "yoloe-11s": dict(label="YOLOE-11-S", family="ultralytics", kind="yoloe", ckpt="weights/yoloe-11s-seg.pt",
-                      open_vocab=True, train="O365v1 + GoldG (GQA + Flickr30k) with SAM masks (Ultralytics docs)"),
+                      open_vocab=True, train=_YOLOE),
     "yoloe-26s": dict(label="YOLOE-26-S", family="ultralytics", kind="yoloe", ckpt="weights/yoloe-26s-seg.pt",
-                      open_vocab=True, train="O365v1 + GoldG (GQA + Flickr30k) with SAM 2.1 masks (Ultralytics docs)"),
+                      open_vocab=True, train=_YOLOE),
     "gdino-t": dict(label="Grounding DINO-T", family="gdino", ckpt="IDEA-Research/grounding-dino-tiny",
                     open_vocab=True, train="O365 + GoldG + Cap4M (groundingdino_swint_ogc; official repo model zoo)"),
     "owlv2-b16": dict(label="OWLv2-B/16", family="owlv2", ckpt="google/owlv2-base-patch16-ensemble", open_vocab=True,
@@ -85,22 +82,21 @@ def load_rows() -> pd.DataFrame:
 
 
 def upsert(row: dict) -> None:
-    """Insert or update the (model, n_images) row. Locked, so several compare.py processes can run in parallel."""
-    with file_lock(CSV):
-        df = load_rows()
-        if len(df):
-            mask = (df["model"] == row["model"]) & (df["n_images"] == row["n_images"])
-            if mask.any():
-                for k, v in row.items():
-                    if k not in df.columns:
-                        df[k] = None
-                    df[k] = df[k].astype(object)
-                    df.loc[mask, k] = v
-            else:
-                df = pd.concat([df, pd.DataFrame([row])], ignore_index=True)
+    """Insert or update the (model, n_images) row."""
+    df = load_rows()
+    if len(df):
+        mask = (df["model"] == row["model"]) & (df["n_images"] == row["n_images"])
+        if mask.any():
+            for k, v in row.items():
+                if k not in df.columns:
+                    df[k] = None
+                df[k] = df[k].astype(object)
+                df.loc[mask, k] = v
         else:
-            df = pd.DataFrame([row])
-        df.to_csv(CSV, index=False)
+            df = pd.concat([df, pd.DataFrame([row])], ignore_index=True)
+    else:
+        df = pd.DataFrame([row])
+    df.to_csv(CSV, index=False)
 
 
 # AP phase
@@ -114,7 +110,7 @@ def run_ap(key, args, coco, ids, cat_ids, names, rgb, bgr):
         torch.cuda.reset_peak_memory_stats()
     r = build_runner(key, args.device, not args.fp32)
     r.set_vocab(names)
-    if m.get("kind") == "yolo":  # closed-set model: its 80 output indices must be COCO's sorted category order
+    if m.get("kind") == "yolo":  # the 80 output indices have to be in COCO's sorted category order
         assert list(r.names) == names, "YOLOv8 class order differs from COCO category order"
     ims = bgr if m["family"] == "ultralytics" else rgb
     dets, t0 = [], time.time()
@@ -146,20 +142,20 @@ def run_timing(key, args, ids, names, rgb, bgr):
     import torch
 
     m = MODELS[key]
-    wait_for_gpu()
+    cuda = is_cuda(args.device)
     log(f"[T] {key}: loading")
     r = build_runner(key, args.device, not args.fp32)
     ims = bgr if m["family"] == "ultralytics" else rgb
 
-    # text-encoding cost (one-time, offline in prompt-then-detect)
+    # text encoding (done once per vocabulary)
     text = {}
     if m["open_vocab"]:
-        with Timer() as T:
+        with Timer(cuda) as T:
             r.set_vocab(names)  # cold: includes loading the text encoder for Ultralytics models
         text["text_encode_cold_ms"] = round(T.ms, 1)
         reps = []
         for _ in range(10):
-            with Timer() as T:
+            with Timer(cuda) as T:
                 r.encode_text_only(names)
             reps.append(T.ms)
         text["text_encode_warm_ms"] = round(float(np.median(reps)), 2)
@@ -169,52 +165,44 @@ def run_timing(key, args, ids, names, rgb, bgr):
     # warm-up, then the timed pass over all subset images
     for im in ims[: args.warmup]:
         r.predict(im, conf=args.conf)
-    clock = probe_clock_under_load(args.device)
-    log(f"[T] {key}: GPU state under load: {clock}")
-    if not args.allow_throttled and clock_throttled(clock):
-        raise SystemExit(f"GPU appears throttled ({clock}); refusing to time. Fix power settings or pass --allow-throttled.")
-    cuda = is_cuda(args.device)
     if cuda:
         torch.cuda.reset_peak_memory_stats()
-    others_before = other_gpu_python_procs()
     t_all = []
     for im in ims:
-        with Timer() as T:
+        with Timer(cuda) as T:
             r.predict(im, conf=args.conf)
         t_all.append(T.ms)
-    others_after = other_gpu_python_procs()
-    # deployment-style threshold (0.25) on the first 100 images: less NMS work for Ultralytics models
+    # same thing at conf 0.25 on the first 100 images (fewer boxes go through NMS)
     t_dep = []
     for im in ims[:100]:
-        with Timer() as T:
+        with Timer(cuda) as T:
             r.predict(im, conf=0.25)
         t_dep.append(T.ms)
     extra = {}
     if m["family"] == "owlv2":  # standard HF call that re-encodes all 80 text queries every image
         t_naive = []
         for im in ims[:100]:
-            with Timer() as T:
+            with Timer(cuda) as T:
                 r.predict_naive(im, conf=args.conf)
             t_naive.append(T.ms)
         extra["ms_per_img_text_every_image"] = round(float(np.mean(t_naive)), 2)
+    # FPS uses the median: the mean gets pulled up by a few slow frames (see ms_per_img_std)
     t = np.array(t_all)
+    med = round(float(np.median(t)), 2)
     row = {"model": key, "n_images": len(ids), "precision": "fp32" if args.fp32 else "fp16", "batch": 1,
            "warmup_iters": args.warmup, "ms_per_img_mean": round(float(t.mean()), 2),
-           "ms_per_img_median": round(float(np.median(t)), 2), "ms_per_img_std": round(float(t.std()), 2),
-           "fps": round(1000.0 / float(t.mean()), 1), "ms_per_img_conf0.25_first100": round(float(np.mean(t_dep)), 2),
+           "ms_per_img_median": med, "ms_per_img_std": round(float(t.std()), 2),
+           "fps": round(1000.0 / med, 1), "ms_per_img_conf0.25_first100": round(float(np.mean(t_dep)), 2),
            "vram_peak_MB_timing": round(torch.cuda.max_memory_allocated() / 2**20) if cuda else None, **text, **extra,
-           "gpu": args.gpu_name, "gpu_pstate_under_load": clock.get("pstate"),
-           "gpu_sm_mhz_under_load": clock.get("sm_mhz"), "gpu_throttle_reasons": clock.get("throttle_reasons"),
-           "other_gpu_python_procs": ";".join(others_before + others_after) or "none",
-           "other_gpu_apps": gpu_apps(), "timing_timestamp": time.strftime("%Y-%m-%d %H:%M")}
+           "gpu": args.gpu_name, "timing_timestamp": time.strftime("%Y-%m-%d %H:%M")}
     upsert(row)
-    log(f"[T] {key}: {row['ms_per_img_mean']} ms/img, {row['fps']} FPS; text {text}")
+    log(f"[T] {key}: {med} ms/img (median), {row['fps']} FPS; text {text}")
     del r
     if cuda:
         torch.cuda.empty_cache()
 
 
-# (horizontal alignment, dx, dy) of the text label next to a marker, in points
+# where the text label goes next to a marker: (horizontal alignment, dx, dy) in points
 LABEL_POS = {"yolov8s-worldv2": ("left", 14, -5), "yoloe-26s": ("right", -14, -5), "yoloe-11s": ("right", -14, -5),
              "yoloe-v8s": ("left", 14, -5)}
 
@@ -233,11 +221,11 @@ def plot(n_images: int | None = None):
     gpu = next((g for g in df.get("gpu", pd.Series(dtype=object)).dropna()), "GPU")
     prec = next((p for p in df.get("precision", pd.Series(dtype=object)).dropna()), "fp16")
     plt = plot_style()
-    fig, ax = plt.subplots(figsize=(16, 6.6))  # slide 11 gives the chart a 1160 x 470 px box
-    # one marker + colour per model family (shape and colour both carry the grouping)
+    fig, ax = plt.subplots(figsize=(16, 6.6))
+    # one marker shape + color per model family
     style = {"yolo": ("s", "#535c69", "Closed-set YOLOv8 (trained on COCO)"),
              "world": ("o", "#0072B2", "YOLO-World v2 (open vocabulary)"),
-             "yoloe": ("D", "#009E73", "YOLOE (open vocabulary, successor)"),
+             "yoloe": ("D", "#009E73", "YOLOE (open vocabulary)"),
              "gdino": ("^", "#D55E00", "Grounding DINO-T (open vocabulary)"),
              "owlv2": ("v", "#CC79A7", "OWLv2-B/16 (open vocabulary)")}
     seen = set()
@@ -249,8 +237,7 @@ def plot(n_images: int | None = None):
                    label=None if fam in seen else fam_label)
         seen.add(fam)
         short = str(r["label"]).replace(" (closed-set)", "").replace(" v2", "")
-        # label placement only (does not move any data point): closed-set labels go under the marker, the rest
-        # above, and the crowded small models get their label to one side
+        # closed-set labels go under the marker, the rest above; the crowded small models get theirs to one side
         ha, dx, dy = LABEL_POS.get(r["model"], ("center", 0, -22 if fam == "yolo" else 13))
         ax.annotate(short, (r["fps"], r["AP"]), xytext=(dx, dy), textcoords="offset points",
                     ha=ha, fontsize=14, color=col, fontweight="bold")
@@ -285,18 +272,13 @@ def main():
     p.add_argument("--conf", type=float, default=0.001)
     p.add_argument("--warmup", type=int, default=10)
     p.add_argument("--fp32", action="store_true")
-    p.add_argument("--allow-throttled", action="store_true")
-    p.add_argument("--max-minutes", type=float, default=90, help="watchdog: hard-exit after this many minutes")
     args = p.parse_args()
 
-    _wd = threading.Timer(args.max_minutes * 60, lambda: (log("WATCHDOG: max-minutes exceeded, exiting"), os._exit(3)))
-    _wd.daemon = True  # never keeps a crashed process alive
-    _wd.start()
     seed_everything()
     t_start = time.time()
     if args.phase == "plot":
         plot(args.n_images)
-        os._exit(0)
+        return
     info = env_info()
     log(f"env: {info}")
     args.gpu_name = info["gpu"] if is_cuda(args.device) else "CPU"
@@ -305,36 +287,26 @@ def main():
     cat_ids, names = coco_names(coco)
     rgb = load_images_rgb(ensure_images(coco, ids))
     bgr = [np.ascontiguousarray(im[..., ::-1]) for im in rgb]
-    run = {"phase": args.phase, "args": vars(args), "env": info, "gpu_apps_at_start": gpu_apps(),
-           "start": time.strftime("%Y-%m-%d %H:%M")}
+    run = {"phase": args.phase, "args": vars(args), "env": info, "start": time.strftime("%Y-%m-%d %H:%M")}
     for key in args.models:
         try:
             if args.phase in ("ap", "all"):
                 run_ap(key, args, coco, ids, cat_ids, names, rgb, bgr)
             if args.phase in ("timing", "all"):
                 run_timing(key, args, ids, names, rgb, bgr)
-        except SystemExit:
-            raise
-        except Exception as e:  # record the failure and continue with the next model
+        except Exception:  # one model failing should not stop the rest
             import traceback
 
             traceback.print_exc()
-            upsert({"model": key, "n_images": len(ids), "label": MODELS[key]["label"],
-                    f"error_{args.phase}": f"{type(e).__name__}: {e}"[:300]})
-            import torch
-
-            if is_cuda(args.device):
-                torch.cuda.empty_cache()
+            log(f"FAILED: {key}")
     run["wall_s"] = round(time.time() - t_start, 1)
-    with file_lock(META):  # several compare.py processes may finish at the same time
-        meta = json.loads(META.read_text()) if META.exists() else {}
-        meta.setdefault("runs", []).append(run)
-        meta["vocabulary"] = names
-        META.write_text(json.dumps(meta, indent=1))
+    meta = json.loads(META.read_text()) if META.exists() else {}
+    meta.setdefault("runs", []).append(run)
+    meta["vocabulary"] = names
+    META.write_text(json.dumps(meta, indent=1))
     if args.phase in ("timing", "all"):
         plot(len(ids))
     log(f"done in {time.time() - t_start:.0f}s")
-    os._exit(0)
 
 
 if __name__ == "__main__":

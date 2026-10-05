@@ -3,10 +3,12 @@
     set_vocab(names)    encode the text vocabulary once (the caller times this separately)
     predict(img, conf)  -> (boxes_xyxy [N,4] in original-image pixels, scores [N], class_idx [N]) as numpy
     info()              dict with params, input resolution, precision
-predict() covers everything after the image is decoded in memory: preprocessing (resize/letterbox/normalise,
+predict() covers everything after the image is decoded in memory: preprocessing (resize/letterbox/normalize,
 host->GPU copy), forward pass, and post-processing (NMS or top-k).
 """
 from __future__ import annotations
+
+from pathlib import Path
 
 import numpy as np
 import torch
@@ -44,8 +46,10 @@ class UltralyticsRunner:
 
     def __init__(self, weight: str, kind: str, device: str = "cuda:0", half: bool = True, imgsz: int = 640,
                  iou: float = 0.7):
+        import ultralytics.nn.text_model as tm
         from ultralytics import YOLO, YOLOE
 
+        tm.WEIGHTS_DIR = Path("weights").resolve()  # so set_classes() finds CLIP in weights/clip
         self.weight, self.kind, self.device, self.half, self.imgsz, self.iou = weight, kind, device, half, imgsz, iou
         self.model = YOLOE(weight) if kind == "yoloe" else YOLO(weight)
         self.model.to(device)
@@ -82,7 +86,6 @@ class UltralyticsRunner:
         else:
             r = self.model.predict(img_bgr, **kw)[0]
         b = r.boxes
-        self.last_speed = r.speed
         return b.xyxy.cpu().numpy(), b.conf.cpu().numpy(), b.cls.cpu().numpy().astype(int)
 
     def info(self) -> dict:
@@ -107,9 +110,9 @@ class UltralyticsRunner:
 class OWLv2Runner:
     """google/owlv2-base-patch16-ensemble via Hugging Face transformers.
 
-    Two inference paths (identical outputs, verified in compare.py):
-      * predict():        text embeddings of the vocabulary are computed ONCE in set_vocab() and reused
-                          (image_embedder -> class_predictor -> box_predictor). This is the fastest fair setup.
+    Two inference paths:
+      * predict():        text embeddings of the vocabulary are computed once in set_vocab() and reused
+                          (image_embedder -> class_predictor -> box_predictor).
       * predict_naive():  the standard HF call model(input_ids, pixel_values) which re-encodes all text queries
                           for every image.
     Post-processing: sigmoid class logits over all (box, query) pairs, top-100 pairs per image (DETR/OWL style,
@@ -141,7 +144,6 @@ class OWLv2Runner:
         emb, tok = self._encode(names)
         self.query_embeds = emb[None]  # [1, Q, D]
         self.query_mask = (tok["input_ids"][:, 0] > 0)[None]
-        self.tok = tok
 
     def encode_text_only(self, names):
         return self._encode(names)[0]
@@ -195,11 +197,12 @@ class OWLv2Runner:
 class GroundingDINORunner:
     """IDEA-Research/grounding-dino-tiny via Hugging Face transformers.
 
-    Follows the official GroundingDINO COCO evaluation (demo/test_ap_on_coco.py): ONE caption with all 80 class
-    names joined by " . " (195 BERT tokens < the 256-token limit, so no chunking is needed). Per-class score for
-    each of the 900 queries = mean over that class's tokens of sigmoid(token logits) (official PostProcessCocoGrounding
-    uses a row-normalised positive map, i.e. the same mean), then top-100 (query, class) pairs per image, no NMS.
-    Text and image are fused inside the encoder/decoder, so the text branch necessarily runs on every image.
+    Follows the official GroundingDINO COCO evaluation (demo/test_ap_on_coco.py): one caption with all 80 class
+    names joined by " . " (195 BERT tokens, under the 256-token limit, so no chunking). Per-class score for each
+    of the 900 queries = mean over that class's tokens of sigmoid(token logits) (the official
+    PostProcessCocoGrounding uses a row-normalized positive map, which is the same mean), then the top 100
+    (query, class) pairs per image, no NMS. The official script keeps the top 300; COCO AP only uses 100.
+    Text and image are fused inside the encoder/decoder, so the text branch runs on every image.
     """
 
     CKPT = "IDEA-Research/grounding-dino-tiny"
@@ -231,14 +234,12 @@ class GroundingDINORunner:
                 if b > a and a >= s and b <= e:
                     pos[c, t] = 1
         assert (pos.sum(1) > 0).all()
-        self.pos = (pos / pos.sum(1, keepdim=True)).to(self.device)  # row-normalised
-        self.caption = caption
+        self.pos = (pos / pos.sum(1, keepdim=True)).to(self.device)  # row-normalized
         self.text_inputs = {k: v.to(self.device) for k, v in tok.items()}
-        self.n_tokens = int(tok["input_ids"].shape[1])
 
     @torch.inference_mode()
     def encode_text_only(self, names):
-        """BERT text backbone only (informational: its output is fused with the image in every forward)."""
+        """BERT text backbone only (its output is fused with the image in every forward pass)."""
         return self.model.model.text_backbone(input_ids=self.text_inputs["input_ids"],
                                               attention_mask=self.text_inputs["attention_mask"])
 
@@ -256,7 +257,7 @@ class GroundingDINORunner:
         keep = s > conf
         s, idx = s[keep], idx[keep]
         qi, ci = idx // C, idx % C
-        b = out.pred_boxes[0].float()[qi]  # cxcywh normalised to the (unpadded) image
+        b = out.pred_boxes[0].float()[qi]  # cxcywh normalized to the (unpadded) image
         b = torch.stack([b[:, 0] - b[:, 2] / 2, b[:, 1] - b[:, 3] / 2, b[:, 0] + b[:, 2] / 2, b[:, 1] + b[:, 3] / 2], 1)
         b = b * torch.tensor([w, h, w, h], device=b.device)
         return b.cpu().numpy(), s.cpu().numpy(), ci.cpu().numpy().astype(int)

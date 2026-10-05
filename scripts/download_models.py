@@ -6,14 +6,13 @@ Usage (from the repo root):
     python scripts/download_models.py --experiments   # also YOLOE, Grounding DINO-T and OWLv2 for experiments/
 
 Everything goes into ./weights/ (git-ignored). Safe to re-run: files that are already there are skipped
-(CLIP is checked by SHA-256). At the end it runs an offline smoke test with YOLO-World S.
+(CLIP is checked by SHA-256). At the end it loads YOLO-World S once to check that everything is there.
 """
 
 from __future__ import annotations
 
 import argparse
 import os
-import sys
 import time
 from pathlib import Path
 
@@ -63,7 +62,7 @@ EXPERIMENT_ASSETS = ["yoloe-v8s-seg.pt", "yoloe-11s-seg.pt", "yoloe-26s-seg.pt",
 
 def fetch_experiment_models() -> None:
     # extra models only used by experiments/: YOLOE (+ its MobileCLIP text encoders), Grounding DINO-T, OWLv2
-    print("YOLOE (successor) and its MobileCLIP text encoders:")
+    print("YOLOE and its MobileCLIP text encoders:")
     for name in EXPERIMENT_ASSETS:
         fetch_yolo(name)
     print("Hugging Face checkpoints (stored in the Hugging Face cache, not in weights/):")
@@ -76,36 +75,32 @@ def fetch_experiment_models() -> None:
         print(f"  [cached]     {repo} -> {path}  ({time.time() - t0:.0f}s)")
 
 
-def smoke_test() -> None:
-    # load YOLO-World S offline and run set_classes + predict once
-    os.environ["YOLO_OFFLINE"] = "1"
-    os.environ["HF_HUB_OFFLINE"] = "1"
-    os.environ["TRANSFORMERS_OFFLINE"] = "1"
-    sys.path.insert(0, str(REPO / "demo"))
+def quick_test() -> None:
+    # load YOLO-World S from weights/ and run set_classes + predict once
     import numpy as np
     import torch
     from ultralytics import YOLOWorld
 
     import ultralytics.nn.text_model as tm
 
-    tm.WEIGHTS_DIR = WEIGHTS  # make CLIP lookup independent of the current working directory
+    tm.WEIGHTS_DIR = WEIGHTS
     device = 0 if torch.cuda.is_available() else "cpu"
     m = YOLOWorld(str(WEIGHTS / "yolov8s-worldv2.pt"))
     m.to("cuda" if device == 0 else "cpu")
     m.set_classes(["person", "guitar"])
     m.predict(np.zeros((320, 320, 3), dtype=np.uint8), device=device, verbose=False)
-    print(f"  smoke test OK on {'GPU: ' + torch.cuda.get_device_name(0) if device == 0 else 'CPU'}")
+    print(f"  OK on {'GPU: ' + torch.cuda.get_device_name(0) if device == 0 else 'CPU'}")
 
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--small", action="store_true", help="only download the S-size models (plus CLIP)")
-    ap.add_argument("--no-test", action="store_true", help="skip the offline smoke test")
+    ap.add_argument("--no-test", action="store_true", help="skip the test at the end")
     ap.add_argument("--experiments", action="store_true",
                     help="also cache the models used only by experiments/ (YOLOE, Grounding DINO-T, OWLv2)")
     args = ap.parse_args()
 
-    os.chdir(REPO)  # Ultralytics resolves its weights_dir setting relative to the CWD
+    os.chdir(REPO)
     WEIGHTS.mkdir(exist_ok=True)
     sizes = ["s"] if args.small else SIZES_ALL
 
@@ -121,8 +116,8 @@ def main() -> None:
     if args.experiments:
         fetch_experiment_models()
     if not args.no_test:
-        print("Offline smoke test:")
-        smoke_test()
+        print("Quick test:")
+        quick_test()
     print("Done. The demo now works without internet: python demo/app.py")
 
 

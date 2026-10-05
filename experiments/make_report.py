@@ -1,5 +1,5 @@
-"""Turn the experiment CSVs into results/README_results.md (tables + caveats) and results/summary.json
-(the numbers quoted in the README and on my slides). No GPU needed.
+"""Turn the experiment CSVs into results/README_results.md and results/summary.json (the numbers quoted in
+the README). No GPU needed.
 
   python experiments/make_report.py [--n-images 500]
 
@@ -66,15 +66,15 @@ def main() -> None:
         if runs:
             env = runs[-1]["env"]
             summary["env"] = env
-            md.append(f"**Hardware and software:** {env.get('gpu')}, driver/limits `{env.get('nvidia_driver')}`, "
+            md.append(f"**Hardware and software:** {env.get('gpu')}, driver {env.get('nvidia_driver')}, "
                       f"torch {env.get('torch')} (CUDA {env.get('cuda')}), ultralytics {env.get('ultralytics')}, "
                       f"transformers {env.get('transformers')}, Python {env.get('python')}, {env.get('os')}\n")
     md.append(f"**Data:** {n} COCO val2017 images (fixed seed 0, ids in `coco_subset_ids.json`), scored with "
               "pycocotools box AP (IoU 0.50:0.95, max 100 detections per image).\n")
     md.append("**Settings for every model:** the 80 plain COCO class names as the vocabulary, score threshold 0.001, "
-              f"batch size 1, {prec}. Speed = mean wall-clock time per image for pre-processing + forward pass + "
+              f"batch size 1, {prec}. Speed = median wall-clock time per image for pre-processing + forward pass + "
               "post-processing with the image already in memory, after warm-up, with nothing else on the GPU. "
-              "No TensorRT and no `torch.compile`.\n")
+              "FPS = 1000 / that median. No TensorRT and no `torch.compile`.\n")
 
     md.append("## Experiment 1: accuracy and speed\n")
     if not len(cmp_):
@@ -83,13 +83,12 @@ def main() -> None:
         rows = []
         for k, r in cmp_.iterrows():
             g = lambda c: r[c] if c in r.index else None
-            err = "; ".join(str(r[c]) for c in r.index if str(c).startswith("error_") and pd.notna(r[c]))
             rows.append([r.get("label", k), "yes" if str(g("open_vocab")) == "True" else "no", cell(g("AP")),
-                         cell(g("AP50")), cell(g("APs")), cell(g("APm")), cell(g("APl")), cell(g("ms_per_img_mean")),
+                         cell(g("AP50")), cell(g("APs")), cell(g("APm")), cell(g("APl")), cell(g("ms_per_img_median")),
                          cell(g("fps")), cell(g("params_detector_M")), cell(g("text_encode_warm_ms")),
-                         cell(g("vram_peak_MB_timing"), 0), err or ""])
+                         cell(g("vram_peak_MB_timing"), 0)])
         md.append(table(["Model", "Open vocab", "AP", "AP50", "APs", "APm", "APl", "ms / image", "FPS",
-                         "Detector params (M)", "Text encoding, 80 names (ms)", "Peak VRAM (MB)", "Error"], rows))
+                         "Detector params (M)", "Text encoding, 80 names (ms)", "Peak VRAM (MB)"], rows))
         md.append("\n![Accuracy vs speed](compare.png)\n")
         ok = cmp_[cmp_["AP"].notna() & cmp_["fps"].notna()] if has("AP") and has("fps") else pd.DataFrame()
         if len(ok):
@@ -102,7 +101,7 @@ def main() -> None:
                 summary["fastest_open_vocab"] = {"model": f, "label": ov.loc[f, "label"], "fps": num(ov.loc[f, "fps"]), "AP": num(ov.loc[f, "AP"])}
                 summary["most_accurate_open_vocab"] = {"model": a, "label": ov.loc[a, "label"], "AP": num(ov.loc[a, "AP"]), "fps": num(ov.loc[a, "fps"])}
             summary["models"] = {k: {"label": r["label"], "AP": num(r["AP"]), "AP50": num(r.get("AP50")), "fps": num(r["fps"]),
-                                     "ms": num(r.get("ms_per_img_mean"), 2)} for k, r in ok.iterrows()}
+                                     "ms": num(r.get("ms_per_img_median"), 2)} for k, r in ok.iterrows()}
             pairs, prow = [], []
             for size, closed, world in PAIRS:
                 if closed in ok.index and world in ok.index:
@@ -118,8 +117,8 @@ def main() -> None:
                 md.append("### YOLO-World against closed-set YOLOv8 of the same size\n")
                 md.append(table(["Size", "YOLOv8 AP", "YOLO-World AP", "AP gap", "YOLOv8 FPS", "YOLO-World FPS",
                                  "YOLO-World speed"], prow))
-                md.append("\nThe closed-set YOLOv8 models were trained on COCO itself; YOLO-World was not, so the AP gap "
-                          "is the price of not training on the test classes' own dataset.\n")
+                md.append("\nThe closed-set YOLOv8 models were trained on COCO itself and YOLO-World was not, so some "
+                          "gap in AP is expected.\n")
         if has("training_data"):
             md.append("### What each model was trained on\n")
             md.append(table(["Model", "Checkpoint", "Training data"],
@@ -184,8 +183,8 @@ def main() -> None:
                     d["drop"] = d["name"] - d["synonym"]
                     worst = d.sort_values("drop", ascending=False).head(5)
                     prompts = pc[(pc["model"] == m) & (pc["condition"] == "synonym")].set_index("class")["prompt"]
-                    md.append("Largest drops: " + "; ".join(f"{r['class']} -> \"{prompts.get(r['class'])}\" "
-                                                            f"({r['name']:.1f} -> {r['synonym']:.1f})" for _, r in worst.iterrows()) + "\n")
+                    md.append("Largest drops: " + "; ".join(f"{r['class']} as \"{prompts.get(r['class'])}\" "
+                                                            f"({r['name']:.1f} to {r['synonym']:.1f})" for _, r in worst.iterrows()) + "\n")
                     summary.setdefault("synonym_largest_drops", {})[m] = [
                         {"class": r["class"], "synonym": prompts.get(r["class"]), "name_AP": num(r["name"]), "synonym_AP": num(r["synonym"])}
                         for _, r in worst.iterrows()]
@@ -194,8 +193,11 @@ def main() -> None:
             md.append("### C. Vocabulary size and accuracy\n")
             conds = list(dict.fromkeys(c["condition"]))
             md.append("AP on the 80 COCO classes when the vocabulary also contains other words. `80+blank` adds one "
-                      "blank entry, the padding the YOLO-World authors recommend. The larger vocabularies add LVIS "
-                      "category names as distractors; boxes labelled with a distractor are dropped before scoring.\n")
+                      "blank entry, the padding the official YOLO-World demos add (the authors say it \"might improve\" "
+                      "the scores). The larger vocabularies add LVIS category names. `predict()` keeps one label per "
+                      "box, and a box whose label is one of the added words is dropped before scoring, so a box that "
+                      "goes to a near-synonym (LVIS \"sofa\" for COCO \"couch\", \"doughnut\" for \"donut\") or to the "
+                      "blank entry counts as a miss. Part of the drop below comes from that.\n")
             md.append(table(["Model"] + conds,
                             [[labels[m]] + [cell(c[(c["model"] == m) & (c["condition"] == x)]["AP"].mean()) for x in conds]
                              for m in models]))
@@ -205,38 +207,44 @@ def main() -> None:
         b = ps[ps["part"] == "B"].sort_values("vocab_size")
         if len(b):
             md.append("### B. Vocabulary size and speed\n")
+            md.append("This is a separate timing run from experiment 1, so the 80-class FPS differs a little from the "
+                      "table at the top.\n")
             md.append(table(["Model", "Classes", "Text encoding, once (ms)", "ms / image", "FPS", "ms / image at conf 0.25"],
-                            [[r["label"], int(r["vocab_size"]), cell(r["text_encode_ms"]), cell(r["ms_per_img_mean"], 2),
-                              cell(r["fps"]), cell(r.get("ms_per_img_conf0.25_first100"), 2)] for _, r in b.iterrows()]))
+                            [[r["label"], int(r["vocab_size"]), cell(r["text_encode_ms"]), cell(r["ms_per_img_median"], 2),
+                              cell(r["fps"]), cell(r.get("ms_per_img_conf0.25_first100"), 2)]
+                             for m in models for _, r in b[b["model"] == m].iterrows()]))
             md.append("\n![Vocabulary size and speed](prompt_study_speed.png)\n")
-            summary["vocab_speed"] = {m: [{"classes": int(r["vocab_size"]), "fps": num(r["fps"]), "ms": num(r["ms_per_img_mean"], 2),
+            summary["vocab_speed"] = {m: [{"classes": int(r["vocab_size"]), "fps": num(r["fps"]), "ms": num(r["ms_per_img_median"], 2),
                                            "text_encode_ms": num(r["text_encode_ms"])} for _, r in b[b["model"] == m].iterrows()]
                                       for m in models}
 
-    # caveats
-    md.append("## How to read these numbers\n")
+    md.append("## Notes\n")
     md.append("\n".join([
-        "- **Not the paper's protocol.** The paper reports zero-shot *Fixed AP* on LVIS minival and FPS on a V100. "
-        "These are standard COCO AP on a 500-image COCO subset, on a different GPU, with fp16. Compare models "
-        "within this table, not with the paper's Table 2.",
-        "- **COCO is not a new-class test.** The open-vocabulary models were not trained on COCO's own box labels "
-        "(the training-data table lists what each one saw; OWLv2 was fine-tuned on LVIS, whose images are COCO "
-        "training images), but COCO's 80 everyday classes are well covered by their training vocabularies. The "
-        "closed-set YOLOv8 models were trained directly on COCO.",
-        "- **YOLO-World v2 weights, not the paper's exact model.** The Ultralytics `-worldv2` checkpoints drop "
-        "Image-Pooling Attention and use BatchNorm instead of L2-Norm in the contrastive head.",
-        "- **Cached, not re-parameterized.** Ultralytics caches the text embeddings after `set_classes()`; it does "
-        "not fold them into the convolution weights as the paper describes. The text encoder still runs only once "
-        "per vocabulary.",
-        "- **YOLOE checkpoints are segmentation models** run as box detectors: the mask branch still runs in the "
-        "forward pass, so their FPS is a lower bound for a box-only model.",
-        "- **Grounding DINO** fuses text and image inside the network, so its text branch runs on every image. "
-        "**OWLv2** runs at 960×960; the YOLO models at 640.",
-        "- **A 500-image subset** has more run-to-run and sampling noise than the full 5,000-image set; differences "
-        "of a few tenths of an AP point are not meaningful.",
-        "- **Synonyms were chosen to cover a range**, from true synonyms to deliberately weak ones (see "
-        "`experiments/prompts.json`), so the overall synonym AP mixes easy and hard cases; the by-kind table "
-        "separates them.",
+        "- These numbers are not comparable with the paper. The paper reports zero-shot Fixed AP on LVIS minival and "
+        "FPS on a V100. This is standard COCO AP on a 500-image subset, on a different GPU, with fp16.",
+        "- COCO is not a test of new classes. None of the open-vocabulary models were trained on COCO's box labels "
+        "(OWLv2 was fine-tuned on LVIS, whose images are COCO training images), but the 80 COCO classes are common "
+        "words that all of them have seen. The closed-set YOLOv8 models were trained on COCO directly.",
+        "- The YOLO models keep one class per box (Ultralytics `predict()`), while OWLv2 and Grounding DINO keep the "
+        "top 100 box-class pairs. The sanity check above shows this costs the YOLO models 0.6 to 1.0 AP compared "
+        "with `model.val()`.",
+        "- FPS uses the median time per image. The three closed-set YOLOv8 models were timed first and had a few "
+        "very slow frames (a standard deviation of 5 to 8 ms on a 6 to 8 ms median), so the mean made them look "
+        "slower than they are. Mean and standard deviation are in `compare.csv`.",
+        "- Peak VRAM for YOLO-World includes the CLIP model that Ultralytics keeps loaded, so it is not the "
+        "detector alone.",
+        "- The checkpoints are YOLO-World v2 (no Image-Pooling Attention, BatchNorm instead of L2-Norm in the "
+        "head). Ultralytics caches the text embeddings after `set_classes()`; it does not fold them into the "
+        "convolution weights like the paper does. The text encoder still runs only once per vocabulary.",
+        "- The YOLOE checkpoints are segmentation models run as box detectors. The mask branch still runs, so a "
+        "box-only YOLOE would be a bit faster.",
+        "- Grounding DINO runs its text branch on every image. Its official zero-shot COCO AP on the full val set "
+        "is 48.4; I measured 51.0 on this subset and did not sanity-check it the way I did the YOLO models. OWLv2 "
+        "runs at 960x960, the YOLO models at 640.",
+        "- With 500 images, differences of a few tenths of an AP point don't mean much. Two classes (hair drier, "
+        "scissors) have no ground truth in the subset, so AP is a mean over 78 classes.",
+        "- The synonyms in `experiments/prompts.json` go from real synonyms to weak ones on purpose. The by-kind "
+        "table separates them.",
     ]))
     md.append("")
 

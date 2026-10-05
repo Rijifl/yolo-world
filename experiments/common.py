@@ -1,5 +1,5 @@
 """Shared helpers for the experiment scripts: repo paths, the fixed-seed COCO val2017 subset (500 images,
-seed=0), image download, pycocotools bbox evaluation, GPU checks before timing, and environment info.
+seed=0), image download, pycocotools bbox evaluation, and environment info.
 """
 from __future__ import annotations
 
@@ -27,12 +27,11 @@ IMG_URL = "http://images.cocodataset.org/val2017/{}"
 LVIS_ZIP = DATA / "lvis" / "lvis_v1_val.json.zip"
 LVIS_URL = "https://dl.fbaipublicfiles.com/LVIS/lvis_v1_val.json.zip"
 RESULTS = ROOT / "results"
-WEIGHTS = ROOT / "weights"
 SUBSET_FILE = RESULTS / "coco_subset_ids.json"
 SEED = 0
 N_SUBSET = 500
 
-os.chdir(ROOT)  # Ultralytics settings use weights_dir="weights" (relative) -> must run from repo root
+os.chdir(ROOT)  # checkpoint paths like weights/yolov8s.pt are relative to the repo root
 RESULTS.mkdir(exist_ok=True)
 
 
@@ -172,7 +171,7 @@ def coco_eval(coco, dets: list[dict], img_ids: list[int], cat_ids: list[int] | N
     if not dets:
         return {k: 0.0 for k in AP_KEYS}
     E = _coco_eval_obj(coco, dets, img_ids, cat_ids)
-    return {k: round(float(v) * 100, 2) for k, v in zip(AP_KEYS, E.stats[:6])}
+    return {k: round(float(v) * 100, 3) for k, v in zip(AP_KEYS, E.stats[:6])}
 
 
 def coco_eval_per_class(coco, dets: list[dict], img_ids: list[int]) -> tuple[dict, dict[int, float | None]]:
@@ -186,8 +185,8 @@ def coco_eval_per_class(coco, dets: list[dict], img_ids: list[int]) -> tuple[dic
     for k, c in enumerate(E.params.catIds):
         p = prec[:, :, k, 0, -1]
         p = p[p > -1]
-        per[int(c)] = round(float(p.mean()) * 100, 2) if p.size else None
-    return {k: round(float(v) * 100, 2) for k, v in zip(AP_KEYS, E.stats[:6])}, per
+        per[int(c)] = round(float(p.mean()) * 100, 3) if p.size else None
+    return {k: round(float(v) * 100, 3) for k, v in zip(AP_KEYS, E.stats[:6])}, per
 
 
 def to_coco_dets(img_id: int, boxes_xyxy, scores, cat_ids) -> list[dict]:
@@ -199,115 +198,9 @@ def to_coco_dets(img_id: int, boxes_xyxy, scores, cat_ids) -> list[dict]:
     return out
 
 
-# GPU state and environment info
-def other_gpu_python_procs() -> list[str]:
-    try:
-        out = subprocess.run(["nvidia-smi", "--query-compute-apps=pid,process_name", "--format=csv,noheader"],
-                             capture_output=True, text=True, timeout=30).stdout
-    except Exception as e:
-        return [f"nvidia-smi failed: {e}"]
-    me = os.getpid()
-    procs = []
-    for line in out.strip().splitlines():
-        if not line.strip():
-            continue
-        pid, name = [s.strip() for s in line.split(",", 1)]
-        if "python" in name.lower() and int(pid) != me:
-            procs.append(line.strip())
-    return procs
-
-
-def gpu_apps() -> str:
-    try:
-        return subprocess.run(["nvidia-smi", "--query-compute-apps=pid,process_name,used_memory", "--format=csv,noheader"],
-                              capture_output=True, text=True, timeout=30).stdout.strip().replace("\n", " | ")
-    except Exception as e:
-        return f"nvidia-smi failed: {e}"
-
-
-def wait_for_gpu(poll_s: int = 60, max_wait_s: int = 3 * 3600) -> float:
-    """Block until no OTHER python process holds the GPU. Returns seconds waited."""
-    t0 = time.time()
-    while True:
-        procs = other_gpu_python_procs()
-        if not procs:
-            waited = time.time() - t0
-            log(f"GPU free of other python processes (waited {waited:.0f}s). GPU compute apps: {gpu_apps() or 'none'}")
-            return waited
-        if time.time() - t0 > max_wait_s:
-            log(f"WARNING: gave up waiting for GPU after {max_wait_s}s; other procs: {procs}")
-            return time.time() - t0
-        log(f"GPU busy with other python process(es) {procs}; polling again in {poll_s}s")
-        time.sleep(poll_s)
-
-
-def gpu_clock_state() -> dict:
-    """Instantaneous P-state / SM clock / throttle reasons (read while a GPU load is running)."""
-    q = "pstate,clocks.sm,clocks.max.sm,power.draw,temperature.gpu,utilization.gpu,memory.used,clocks_throttle_reasons.active"
-    try:
-        out = subprocess.run(["nvidia-smi", f"--query-gpu={q}", "--format=csv,noheader"], capture_output=True,
-                             text=True, timeout=30).stdout.strip()
-    except Exception as e:
-        return {"error": str(e)}
-    keys = ["pstate", "sm_mhz", "max_sm_mhz", "power_w", "temp_c", "util_pct", "mem_used", "throttle_reasons"]
-    line = out.splitlines()[0] if out else ""  # inside a Slurm job only the allocated GPU is visible
-    return dict(zip(keys, [s.strip() for s in line.split(",")]))
-
-
-def probe_clock_under_load(device) -> dict:
-    """Run ~3 s of matmuls and sample the clock mid-way; used to refuse timing while the GPU is throttled."""
-    import threading
-
-    import torch
-
-    if not str(device).startswith("cuda"):
-        return {}
-    a = torch.randn(1024, 1024, device=device, dtype=torch.half)
-    res = {}
-
-    def sample():
-        time.sleep(1.5)
-        res.update(gpu_clock_state())
-
-    th = threading.Thread(target=sample)
-    th.start()
-    t = time.time()
-    while time.time() - t < 3:
-        for _ in range(20):
-            a @ a
-        torch.cuda.synchronize()
-    th.join()
-    return res
-
-
-def clock_throttled(clock: dict) -> bool:
-    """True only when the SM clock under load is below half of its maximum (the stuck-laptop case).
-    Unreadable values ('[N/A]', as some data-center GPUs report) count as not throttled."""
-    try:
-        sm = float(str(clock["sm_mhz"]).split()[0])
-        mx = float(str(clock["max_sm_mhz"]).split()[0])
-    except (KeyError, ValueError, IndexError):
-        return False
-    return mx > 0 and sm < 0.5 * mx
-
-
+# environment info
 def is_cuda(device) -> bool:
     return str(device).startswith("cuda")
-
-
-def power_state() -> str:
-    if platform.system() != "Windows":
-        return "unknown"
-    try:
-        out = subprocess.run(["powershell", "-NoProfile", "-Command",
-                              "(Get-CimInstance -Namespace root/wmi -ClassName BatteryStatus).PowerOnline;"
-                              "(Get-CimInstance Win32_Battery).EstimatedChargeRemaining"],
-                             capture_output=True, text=True, timeout=60).stdout.split()
-        online = out[0] if out else "?"
-        charge = out[1] if len(out) > 1 else "?"
-        return f"AC power online={online}, battery={charge}%"
-    except Exception as e:
-        return f"unknown ({e})"
 
 
 def env_info() -> dict:
@@ -320,48 +213,17 @@ def env_info() -> dict:
         "cudnn": torch.backends.cudnn.version(), "ultralytics": ultralytics.__version__,
         "transformers": transformers.__version__, "os": platform.platform(),
         "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "none",
-        "power": power_state(),
     }
     try:
-        info["nvidia_driver"] = subprocess.run(["nvidia-smi", "--query-gpu=driver_version,power.limit,clocks.max.sm",
-                                                "--format=csv,noheader"], capture_output=True, text=True).stdout.strip()
+        info["nvidia_driver"] = subprocess.run(["nvidia-smi", "--query-gpu=driver_version", "--format=csv,noheader"],
+                                               capture_output=True, text=True).stdout.strip()
     except Exception:
         pass
     return info
 
 
-class file_lock:
-    """Cross-process lock via an exclusive lock file, so parallel runs can update the same CSV.
-    A lock older than `stale_s` (left by a killed process) is removed."""
-
-    def __init__(self, target: Path, stale_s: float = 120.0):
-        self.path = Path(str(target) + ".lock")
-        self.stale_s = stale_s
-
-    def __enter__(self):
-        while True:
-            try:
-                self.fd = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-                return self
-            except FileExistsError:
-                try:
-                    if time.time() - self.path.stat().st_mtime > self.stale_s:
-                        self.path.unlink()
-                        continue
-                except FileNotFoundError:
-                    continue
-                time.sleep(0.2)
-
-    def __exit__(self, *a):
-        os.close(self.fd)
-        try:
-            self.path.unlink()
-        except FileNotFoundError:
-            pass
-
-
 class Timer:
-    """CUDA-synchronised wall-clock timer (ms)."""
+    """Wall-clock timer in ms; calls torch.cuda.synchronize() on both sides."""
 
     def __init__(self, cuda: bool = True):
         import torch
@@ -392,6 +254,3 @@ def plot_style():
                          "svg.fonttype": "none", "axes.spines.top": False, "axes.spines.right": False})
     return plt
 
-
-# Okabe-Ito colour-blind-safe palette
-OKABE_ITO = ["#0072B2", "#E69F00", "#009E73", "#D55E00", "#CC79A7", "#56B4E9", "#F0E442", "#000000"]

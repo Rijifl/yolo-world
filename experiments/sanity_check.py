@@ -15,10 +15,8 @@ import argparse
 import json
 import os
 import shutil
-import threading
 import time
 
-import numpy as np
 import pandas as pd
 
 from common import (DATA, RESULTS, coco_eval, coco_names, ensure_images, load_coco, log, seed_everything,
@@ -80,11 +78,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--n-images", type=int, default=500)
     p.add_argument("--device", default="cuda:0")
-    p.add_argument("--max-minutes", type=float, default=45)
     args = p.parse_args()
-    _wd = threading.Timer(args.max_minutes * 60, lambda: (log("WATCHDOG exit"), os._exit(3)))
-    _wd.daemon = True  # never keeps a crashed process alive
-    _wd.start()
     seed_everything()
     t0 = time.time()
     coco = load_coco()
@@ -114,7 +108,6 @@ def main():
     df.to_csv(RESULTS / "sanity_check.csv", index=False)
     print(df.to_string())
     log(f"done in {time.time() - t0:.0f}s")
-    os._exit(0)
 
 
 if __name__ == "__main__":
