@@ -10,3 +10,7 @@ runs/
 *.ts
 .DS_Store
 *.lock
+cluster/logs/*
+!cluster/logs/.gitkeep
+results_bundle.tar.gz
+results/.lock

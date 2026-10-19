@@ -38,7 +38,7 @@ import pandas as pd
 
 from common import (RESULTS, SEED, Timer, clean_lvis_names, coco_eval, coco_eval_per_class, coco_names,
                     ensure_images, env_info, is_cuda, load_coco, load_images_rgb, log, plot_style, seed_everything,
-                    subset_ids, to_coco_dets)
+                    results_lock, subset_ids, to_coco_dets)
 
 CSV = RESULTS / "prompt_study.csv"
 CSV_CLASS = RESULTS / "prompt_study_per_class.csv"
@@ -56,6 +56,11 @@ KEY = ["part", "model", "condition", "n_images"]
 
 
 def upsert(csv: Path, rows: list[dict], key: list[str]) -> None:
+    with results_lock():
+        _upsert(csv, rows, key)
+
+
+def _upsert(csv: Path, rows: list[dict], key: list[str]) -> None:
     df = pd.read_csv(csv, dtype={"condition": str}) if csv.exists() else pd.DataFrame()
     new = pd.DataFrame(rows)
     if len(df):

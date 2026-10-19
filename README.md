@@ -77,6 +77,8 @@ No NVIDIA GPU? Install plain `torch==2.6.0 torchvision==0.21.0` instead. It work
 | `python demo/app.py --share` | also print a public gradio.live link |
 | `DEMO_DEVICE=cpu` | force CPU |
 
+On Windows you can also double-click `start_demo.bat`. It checks the GPU first and falls back to the CPU if the GPU is throttled or missing.
+
 ## What's in here
 
 ```
@@ -85,7 +87,9 @@ demo/          Gradio app: YOLO-World next to closed-set YOLOv8 on the same imag
 notebooks/     Colab walkthrough: closed set vs open vocabulary, "encode once" timing, prompt wording
 experiments/   11-model accuracy/speed comparison and a prompt/vocabulary study
 results/       CSVs, charts and the full report from my run, plus pre-computed demo images
-scripts/       download the weights, pre-compute the demo images
+scripts/       download the weights and data, pre-compute the demo images, GPU check for the launcher
+cluster/       Slurm job that runs every experiment on one GPU, plus the environment setup
+start_demo.bat Windows launcher: GPU check, then the demo
 ```
 
 ## Results
@@ -129,7 +133,16 @@ python experiments/prompt_study.py
 python experiments/make_report.py
 ```
 
-The COCO annotations and the 500 images download themselves on the first run. You need a GPU for the timing part.
+The COCO annotations and the 500 images download themselves on the first run (or ahead of time with `python scripts/download_data.py`). You need a GPU for the timing part. Run the timing on an otherwise idle GPU: `--phase ap` and `--phase timing` can be run separately, and only the timing needs the GPU to itself.
+
+**On a Slurm cluster** (this is how the numbers above were made):
+
+```bash
+bash cluster/setup_env.sh                                  # on the login node: venv, weights, data
+sbatch --gpus=a100:1 cluster/run_experiments.sbatch        # all experiments, report and charts in results/
+```
+
+The job runs the accuracy passes in parallel, then the timing one model at a time with nothing else on the GPU. `N_IMAGES=50 sbatch ...` gives a quick trial run. Logs go to `cluster/logs/`.
 
 ## Notes
 

@@ -3,6 +3,7 @@ seed=0), image download, pycocotools bbox evaluation, and environment info.
 """
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import platform
@@ -37,6 +38,26 @@ RESULTS.mkdir(exist_ok=True)
 
 def log(msg: str) -> None:
     print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
+
+
+@contextlib.contextmanager
+def results_lock(timeout_s: float = 120):
+    """Lock for read-modify-write of files in results/: the cluster job runs several scripts at once."""
+    lock = RESULTS / ".lock"
+    t0 = time.time()
+    while True:
+        try:
+            fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            break
+        except FileExistsError:
+            if time.time() - t0 > timeout_s:
+                raise TimeoutError(f"{lock} held for over {timeout_s:.0f}s; delete it if no job is running")
+            time.sleep(0.2)
+    try:
+        yield
+    finally:
+        os.close(fd)
+        lock.unlink(missing_ok=True)
 
 
 def seed_everything(seed: int = SEED) -> None:

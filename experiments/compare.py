@@ -30,7 +30,7 @@ import numpy as np
 import pandas as pd
 
 from common import (DATA, RESULTS, Timer, coco_eval, coco_names, ensure_images, env_info, is_cuda, load_coco,
-                    load_images_rgb, log, plot_style, seed_everything, subset_ids, to_coco_dets)
+                    load_images_rgb, log, plot_style, results_lock, seed_everything, subset_ids, to_coco_dets)
 
 CSV = RESULTS / "compare.csv"
 META = RESULTS / "compare_meta.json"
@@ -83,6 +83,11 @@ def load_rows() -> pd.DataFrame:
 
 def upsert(row: dict) -> None:
     """Insert or update the (model, n_images) row."""
+    with results_lock():
+        _upsert(row)
+
+
+def _upsert(row: dict) -> None:
     df = load_rows()
     if len(df):
         mask = (df["model"] == row["model"]) & (df["n_images"] == row["n_images"])
@@ -300,10 +305,11 @@ def main():
             traceback.print_exc()
             log(f"FAILED: {key}")
     run["wall_s"] = round(time.time() - t_start, 1)
-    meta = json.loads(META.read_text()) if META.exists() else {}
-    meta.setdefault("runs", []).append(run)
-    meta["vocabulary"] = names
-    META.write_text(json.dumps(meta, indent=1))
+    with results_lock():
+        meta = json.loads(META.read_text()) if META.exists() else {}
+        meta.setdefault("runs", []).append(run)
+        meta["vocabulary"] = names
+        META.write_text(json.dumps(meta, indent=1))
     if args.phase in ("timing", "all"):
         plot(len(ids))
     log(f"done in {time.time() - t_start:.0f}s")
