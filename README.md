@@ -113,7 +113,7 @@ What I found:
 - **Open vocabulary has a price.** Next to a closed-set YOLOv8 of the same size (which was trained on COCO itself), YOLO-World is 7 to 8 AP lower and about 30% slower.
 - **The speed claim holds.** YOLO-World-L is about 9 times faster than Grounding DINO-T (84 vs 9.4 FPS). On COCO, Grounding DINO-T is the more accurate of the two (51.0 vs 46.7 AP); the paper's accuracy comparison is on LVIS, not COCO.
 - **The wording of the prompt matters.** For YOLO-World-S, naming the same 80 classes with synonyms drops AP from 39.0 to 25.6. Short descriptions give 32.2, and the template "a photo of a {name}" gives 33.1.
-- **A bigger vocabulary does not cost speed.** YOLO-World-S stays at about 109 to 111 FPS from 1 to 1,203 words (a separate timing run from the table above, so it is not exactly 106).
+- **A bigger vocabulary barely costs speed.** YOLO-World-S stays at about 106 to 107 FPS from 1 to 365 words and drops to about 103 FPS at 1,203 words (a separate timing run from the table above, so the 80-word number is 107, not 106).
 - **A bigger vocabulary lowered AP, but part of that is my scoring.** With 1,203 words, AP on the 80 COCO classes falls from 39.0 to 29.2 (S), and one blank entry lowers it to 34.2. Ultralytics keeps one label per box and I drop boxes whose label is one of the added words, some of which are close to COCO classes ("sofa", "doughnut"), so I can't say how much of the drop is the model.
 
 <p align="center">
